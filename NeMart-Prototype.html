@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeMart — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================ NEART PROTOTYPE */
+:root{
+  --green-700:#15803d; --green-600:#16a34a; --green-500:#22c55e; --green-50:#f0fdf4;
+  --green-25:#f7fef9; --green-600-dim:#16a34a22; --green-600-dim-2:#16a34a14;
+  --amber-50:#fffbeb; --amber-100:#fef3c7; --amber-400:#fbbf24; --amber-200:#fde68a; --amber-50-dim:#fef3c755;
+  --red-50:#fef2f2; --red-100:#fee2e2; --red-500:#ef4444; --red-700:#b91c1c;
+  --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-150:#edf0f3; --gray-200:#e5e7eb; --gray-300:#d1d5db; --gray-400:#9ca3af; --gray-500:#6b7280; --gray-600:#4b5563; --gray-700:#374151; --gray-800:#1f2937; --gray-900:#111827;
+  --teal-50:#f0fdfa; --teal-200:#99f6e4; --teal-500:#14b8a6; --teal-600:#0d9488;
+  --indigo-50:#eef2ff; --indigo-500:#6366f1;
+  --blue-50:#eff6ff; --blue-100:#dbeafe; --blue-500:#3b82f6;
+  --purple-50:#faf5ff; --purple-500:#8b5cf6; --purple-700:#7e22ce;
+  --white:#ffffff; --black:#000000;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05); --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06); --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1); --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);
+  --radius:14px; --radius-lg:18px; --radius-xl:24px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;background:var(--green-25);color:var(--gray-800);font-size:15px;line-height:1.5;overscroll-behavior:none}
+
+/* ============ SCREEN FRAME ============ */
+#frame{position:fixed;inset:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;background:linear-gradient(135deg,#16a34a08,#22c55e06 50%,#0d948808)}
+#device{width:390px;height:844px;background:var(--white);border-radius:44px;box-shadow:0 0 0 11px #1a1a1a,0 0 0 13px #333,0 35px 70px -15px rgba(0,0,0,.4),0 0 100px -20px rgba(22,163,74,.3);position:relative;overflow:hidden;align-self:center;justify-self:center}
+#notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:122px;height:32px;background:#1a1a1a;border-radius:20px;z-index:9999}
+#status-bar{height:48px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-size:14px;font-weight:600;color:var(--gray-800);position:relative;z-index:100;flex-shrink:0}
+#status-bar .sb-icons{display:flex;align-items:center;gap:5px}
+#status-bar .sb-icons svg{width:16px;height:16px}
+#home-indicator{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;background:var(--gray-800);border-radius:3px;opacity:.3;z-index:9999}
+#phone{height:100%;display:flex;flex-direction:column;position:relative}
+#content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative}
+#content::-webkit-scrollbar{width:0}
+.screen{display:none;padding:16px 18px 96px;animation:fade .3s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============ BACKDROP FOR OVERLAYS ============ */
+.backdrop{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:9000;display:none;animation:fade .2s}
+.backdrop.active{display:block}
+
+/* ============ TOPBAR ============ */
+.topbar{display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-top:4px}
+.topbar .icon-btn{width:36px;height:36px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;flex-shrink:0;color:var(--gray-700);font-size:20px;line-height:1}
+.topbar h1{font-size:19px;font-weight:700;flex:1;color:var(--gray-900)}
+.topbar h1.center{text-align:center}
+.topbar h1.small{font-size:16px}
+
+/* ============ LOGO ============ */
+.logo{display:flex;align-items:center;gap:9px}
+.logo .mark{width:34px;height:34px;background:var(--green-600);border-radius:9px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:17px;letter-spacing:-.5px;box-shadow:0 4px 10px -2px rgba(22,163,74,.4)}
+.logo .text{font-size:19px;font-weight:800;color:var(--gray-900);letter-spacing:-.5px}
+.logo .text .accent{color:var(--green-600)}
+
+/* ============ SEARCH BAR ============ */
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--gray-100);border-radius:12px;padding:10px 14px;margin-bottom:14px;cursor:pointer}
+.search-bar svg{width:18px;height:18px;color:var(--gray-500);flex-shrink:0}
+.search-bar span{color:var(--gray-400);font-size:14px;flex:1}
+
+/* ============ CATEGORY PILLS ============ */
+.cat-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none}
+.cat-row::-webkit-scrollbar{display:none}
+.pill{padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;background:var(--gray-100);color:var(--gray-600);border:1.5px solid transparent;transition:.15s}
+.pill.active{background:var(--green-600);color:white}
+.pill:not(.active):hover{background:var(--gray-150)}
+
+/* ============ SECTION HEADER ============ */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin:18px 0 12px}
+.sec-head h2{font-size:15px;font-weight:700}
+.sec-head a{font-size:13px;color:var(--green-600);font-weight:600;cursor:pointer}
+
+/* ============ PO CARD ============ */
+.po-card{background:white;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px;cursor:pointer;transition:.15s}
+.po-card:active{transform:scale(.98)}
+.po-card .img{height:140px;background:linear-gradient(135deg,var(--green-500),var(--teal-500));position:relative;display:flex;align-items:center;justify-content:center;color:white;font-size:42px}
+.po-card .img.food{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.po-card .img.laundry{background:linear-gradient(135deg,#3b82f6,#6366f1)}
+.po-card .img.print{background:linear-gradient(135deg,#8b5cf6,#ec4899)}
+.po-card .img.jastip{background:linear-gradient(135deg,#14b8a6,#22c55e)}
+.po-card .img .status-badge{position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;color:white}
+.po-card .img .status-badge.open{background:rgba(34,197,94,.9)}
+.po-card .img .status-badge.closed{background:rgba(0,0,0,.65)}
+.po-card .img .featured-tag{position:absolute;top:10px;right:10px;padding:4px 8px;border-radius:6px;font-size:10px;font-weight:700;background:var(--amber-400);color:var(--gray-900);display:flex;align-items:center;gap:3px}
+.po-card .info{padding:12px 14px}
+.po-card .info h3{font-size:14px;font-weight:700;margin-bottom:4px;line-height:1.3}
+.po-card .info .seller{font-size:12px;color:var(--gray-500);margin-bottom:6px}
+.po-card .info .price{font-size:15px;font-weight:800;color:var(--green-600)}
+.po-card .info .meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:11px;color:var(--gray-500)}
+.po-card .info .meta .rating{display:flex;align-items:center;gap:3px;color:var(--amber-400)}
+.po-card .info .meta .rating svg{width:12px;height:12px;fill:var(--amber-400)}
+
+/* ============ BOTTOM NAV ============ */
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;height:74px;background:white;border-top:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-around;padding:0 8px;padding-bottom:18px;z-index:50}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-item .ico{width:24px;height:24px;color:var(--gray-400);display:flex;align-items:center;justify-content:center}
+.nav-item .ico svg{width:24px;height:24px}
+.nav-item.active .ico{color:var(--green-600)}
+.nav-item span{font-size:10px;color:var(--gray-400);font-weight:600}
+.nav-item.active span{color:var(--green-600)}
+.nav-item.fab .ico{width:48px;height:48px;background:var(--green-600);color:white;border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px -2px rgba(22,163,74,.5);margin-top:-28px}
+.nav-item.fab .ico svg{width:24px;height:24px}
+.nav-item.fab span{margin-top:-2px}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;border:none;transition:.15s;width:100%}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--green-600);color:white}
+.btn-primary:hover{background:var(--green-700)}
+.btn-secondary{background:var(--green-50);color:var(--green-700)}
+.btn-outline{background:white;color:var(--gray-700);border:1.5px solid var(--gray-300)}
+.btn-danger{background:var(--red-50);color:var(--red-700)}
+.btn-amber{background:var(--amber-400);color:var(--gray-900)}
+.btn-amber:hover{background:var(--amber-200)}
+.btn-sm{padding:8px 16px;font-size:13px;border-radius:10px;width:auto}
+.btn-lg{padding:16px 24px;font-size:16px}
+.btn-icon{width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:var(--gray-100);border:none;cursor:pointer;color:var(--gray-700)}
+.btn-icon svg{width:20px;height:20px}
+
+/* ============ INPUTS ============ */
+.input-group{margin-bottom:14px}
+.input-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--gray-700)}
+.input{width:100%;padding:14px 16px;border:1.5px solid var(--gray-300);border-radius:12px;font-size:15px;font-family:inherit;background:white;transition:.15s;color:var(--gray-800)}
+.input:focus{outline:none;border-color:var(--green-600);box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+.input::placeholder{color:var(--gray-400)}
+textarea.input{min-height:80px;resize:vertical}
+select.input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M2 4l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+
+/* ============ BADGES ============ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700}
+.badge-green{background:var(--green-50);color:var(--green-700)}
+.badge-amber{background:var(--amber-50);color:var(--amber-400)}
+.badge-red{background:var(--red-50);color:var(--red-700)}
+.badge-gray{background:var(--gray-100);color:var(--gray-600)}
+.badge-blue{background:var(--blue-50);color:var(--blue-500)}
+
+/* ============ MISC ============ */
+.divider{height:1px;background:var(--gray-200);margin:16px 0}
+.text-muted{color:var(--gray-500)}
+.text-sm{font-size:13px}
+.text-xs{font-size:11px}
+.text-lg{font-size:17px}
+.text-xl{font-size:20px}
+.text-2xl{font-size:24px}
+.text-center{text-align:center}
+.font-bold{font-weight:700}
+.font-extrabold{font-weight:800}
+.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.mt-6{margin-top:24px}
+.mb-1{margin-bottom:4px}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}
+.flex{display:flex}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.flex-1{flex:1}.gap-1{gap:4px}.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}
+.w-full{width:100%}
+.hidden{display:none}
+.empty-state{text-align:center;padding:40px 20px;color:var(--gray-400)}
+.empty-state .ico{font-size:48px;margin-bottom:12px}
+.tag-pro{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:6px;background:linear-gradient(135deg,var(--purple-500),var(--indigo-500));color:white;font-size:10px;font-weight:700}
+
+/* ============ SHEET / MODAL ============ */
+.sheet{position:absolute;bottom:0;left:0;right:0;background:white;border-radius:24px 24px 0 0;z-index:9100;max-height:90%;overflow-y:auto;display:none;animation:slideUp .3s ease;box-shadow:0 -10px 30px rgba(0,0,0,.15)}
+.sheet.active{display:block}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet .grab{width:40px;height:4px;background:var(--gray-300);border-radius:2px;margin:10px auto}
+.sheet .sheet-head{padding:0 20px 12px;font-size:16px;font-weight:700;position:sticky;top:0;background:white;z-index:1}
+.sheet .sheet-body{padding:0 20px 20px}
+.sheet-close{position:absolute;top:12px;right:16px;width:30px;height:30px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;font-size:18px;color:var(--gray-600)}
+
+/* ============ TOAST ============ */
+#toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--gray-800);color:white;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;z-index:10000;opacity:0;transition:.3s;pointer-events:none;box-shadow:var(--shadow-lg);max-width:300px;text-align:center}
+#toast.show{opacity:1;top:80px}
+#toast.success{background:var(--green-600)}
+#toast.error{background:var(--red-500)}
+
+/* ============ QRIS ============ */
+.qr-box{background:white;padding:16px;border-radius:12px;border:1px solid var(--gray-200);display:inline-block}
+.qr-pattern{width:160px;height:160px;background:repeating-conic-gradient(var(--gray-900) 0% 25%,white 0% 50%) 0 0/16px 16px;border:4px solid white;box-shadow:0 0 0 1px var(--gray-300)}
+
+/* ============ TIMELINE ============ */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:10px;top:6px;bottom:6px;width:2px;background:var(--gray-200)}
+.tl-item{position:relative;padding-bottom:20px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item .dot{position:absolute;left:-22px;top:2px;width:14px;height:14px;border-radius:50%;background:white;border:3px solid var(--gray-300)}
+.tl-item.done .dot{border-color:var(--green-500);background:var(--green-500)}
+.tl-item.current .dot{border-color:var(--green-600);background:var(--green-600);box-shadow:0 0 0 4px rgba(22,163,74,.2)}
+.tl-item .tl-title{font-size:14px;font-weight:600}
+.tl-item .tl-time{font-size:12px;color:var(--gray-500);margin-top:2px}
+.tl-item.current .tl-title{color:var(--green-600)}
+
+/* ============ STEPPER ============ */
+.qty-stepper{display:flex;align-items:center;gap:16px}
+.qty-stepper button{width:36px;height:36px;border-radius:50%;background:var(--green-50);border:none;font-size:20px;color:var(--green-600);cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center}
+.qty-stepper .val{font-size:18px;font-weight:700;min-width:24px;text-align:center}
+
+/* ============ STAR RATING ============ */
+.star-rating{display:flex;gap:6px;justify-content:center}
+.star-rating .star{font-size:36px;color:var(--gray-300);cursor:pointer;transition:.15s}
+.star-rating .star.active{color:var(--amber-400)}
+
+/* ============ SALDO CARD ============ */
+.saldo-card{background:linear-gradient(135deg,var(--green-600),var(--teal-600));color:white;border-radius:16px;padding:20px;box-shadow:0 8px 20px -8px rgba(22,163,74,.5)}
+.saldo-card .label{font-size:12px;opacity:.85}
+.saldo-card .amount{font-size:26px;font-weight:800;margin:4px 0}
+.saldo-card .sub{display:flex;justify-content:space-between;margin-top:14px;font-size:12px;opacity:.9}
+.saldo-card .sub .val{font-weight:700;font-size:14px}
+
+/* ============ ORDER CARD ============ */
+.order-card{background:white;border-radius:12px;padding:14px;box-shadow:var(--shadow-sm);margin-bottom:10px;border:1px solid var(--gray-100)}
+.order-card .oh{display:flex;gap:12px;align-items:center}
+.order-card .oh .ic{width:44px;height:44px;border-radius:10px;background:var(--green-50);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.order-card .oh .info h4{font-size:14px;font-weight:700}
+.order-card .oh .info p{font-size:12px;color:var(--gray-500)}
+.order-card .oh .info .price{font-size:14px;font-weight:700;color:var(--green-600)}
+.order-card .of{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--gray-100)}
+
+/* ============ TABS ============ */
+.tabs{display:flex;background:var(--gray-100);border-radius:10px;padding:3px;margin-bottom:16px}
+.tabs .tab{flex:1;padding:8px 12px;border-radius:8px;text-align:center;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;border:none;background:none;font-family:inherit}
+.tabs .tab.active{background:white;color:var(--gray-800);box-shadow:var(--shadow-sm)}
+
+/* ============ PLAN CARD ============ */
+.plan-card{border:2px solid var(--gray-200);border-radius:16px;padding:18px;margin-bottom:12px;background:white}
+.plan-card.pro{border-color:var(--purple-500);background:linear-gradient(135deg,var(--purple-50),white);position:relative}
+.plan-card.pro::before{content:'POPULER';position:absolute;top:-10px;right:16px;background:linear-gradient(135deg,var(--purple-500),var(--indigo-500));color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px}
+.plan-card .price-val{font-size:24px;font-weight:800}
+.plan-card .price-per{font-size:13px;color:var(--gray-500)}
+.plan-card ul{list-style:none;margin:14px 0}
+.plan-card ul li{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px}
+.plan-card ul li svg{width:16px;height:16px;color:var(--green-600);flex-shrink:0}
+.plan-card ul li.no svg{color:var(--gray-400)}
+
+/* ============ SELLER BANNER ============ */
+.seller-banner{background:linear-gradient(135deg,var(--green-600),var(--teal-600));color:white;border-radius:14px;padding:16px;display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.seller-banner .ic{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+
+/* ============ STAT GRID ============ */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat-card{background:white;border-radius:12px;padding:14px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100)}
+.stat-card .stat-ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:8px}
+.stat-card .stat-val{font-size:18px;font-weight:800}
+.stat-card .stat-lbl{font-size:11px;color:var(--gray-500);margin-top:2px}
+
+/* ============ MISC CARDS ============ */
+.info-card{background:var(--green-50);border-radius:12px;padding:14px;display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.info-card .ic{font-size:18px;flex-shrink:0}
+.info-card .body h4{font-size:13px;font-weight:700;color:var(--green-700);margin-bottom:2px}
+.info-card .body p{font-size:12px;color:var(--gray-600);line-height:1.4}
+
+.profile-img{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--green-500),var(--teal-500));display:flex;align-items:center;justify-content:center;color:white;font-size:32px;font-weight:800;margin:0 auto 12px}
+
+.rv-card{background:white;border-radius:12px;padding:14px;box-shadow:var(--shadow-sm);margin-bottom:10px}
+.rv-card .rh{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.rv-card .rh .av{width:32px;height:32px;border-radius:50%;background:var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--gray-600)}
+.rv-card .rh .nm{font-size:13px;font-weight:600}
+.rv-card .rh .dt{font-size:11px;color:var(--gray-400)}
+.rv-card .rt{font-size:13px;color:var(--gray-700);line-height:1.5}
+
+.filter-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:var(--gray-100);font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent}
+.filter-chip.active{background:var(--green-600);color:white}
+.filter-chip svg{width:14px;height:14px}
+
+/* desktop side info */
+.side-note{align-self:center;justify-self:start;padding:40px;max-width:340px}
+.side-note h2{font-size:22px;font-weight:800;margin-bottom:8px}
+.side-note p{color:var(--gray-500);font-size:14px;line-height:1.6;margin-bottom:20px}
+.side-note .legend{background:white;border-radius:14px;padding:18px;box-shadow:var(--shadow);border:1px solid var(--gray-200)}
+.side-note .legend h3{font-size:14px;font-weight:700;margin-bottom:10px}
+.side-note .legend .li{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-600);padding:4px 0}
+.side-note .legend .li .dt{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.side-note .screen-ind{margin-top:16px;font-size:12px;color:var(--gray-400);font-weight:600}
+
+@media(max-width:1100px){#frame{grid-template-columns:1fr}#device{box-shadow:0 0 0 8px #1a1a1a,0 0 0 10px #333,0 20px 50px -10px rgba(0,0,0,.3)}.side-note{display:none}}
+@media(max-width:420px){#device{width:100%;height:100%;border-radius:0;box-shadow:none}#notch,#home-indicator{display:none}#status-bar{height:40px}}
+</style>
+</head>
+<body>
+
+<div id="frame">
+<div class="side-note">
+  <div class="logo"><div class="mark">N</div><div class="text">Ne<span class="accent">Mart</span></div></div>
+  <h2 style="margin-top:20px">Prototype Klik</h2>
+  <p>Prototype ini mendemonstrasikan alur inti NeMart: cari → pesan → bayar → konfirmasi → rating. Semua data bersifat dummy. Pembayaran QRIS, escrow, dan verifikasi disimulasikan.</p>
+  <div class="legend">
+    <h3>Alur yang tersedia</h3>
+    <div class="li"><div class="dt" style="background:var(--green-500)"></div> Pembeli: Login → Beranda → Detail PO → Checkout → Bayar → Pantau → Konfirmasi → Rating</div>
+    <div class="li"><div class="dt" style="background:var(--blue-500)"></div> Penjual: Daftar → Verifikasi → Buat PO → Kelola Pesanan → Saldo → Boost</div>
+    <div class="li"><div class="dt" style="background:var(--purple-500)"></div> Admin: Verifikasi Penjual → Tangani Laporan</div>
+  </div>
+  <div class="screen-ind">Layar aktif: <span id="screen-ind-name">—</span></div>
+</div>
+
+<div id="device">
+  <div id="notch"></div>
+  <div id="phone">
+    <div id="status-bar">
+      <span id="sb-time">9:41</span>
+      <div class="sb-icons">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 22h20V2L2 22z" opacity=".3"/><path d="M2 22h20V2L2 22z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C7 3 2.5 5 1 8c1.5 3 6 5 11 5s9.5-2 11-5c-1.5-3-6-5-11-5z" opacity=".3"/><path d="M12 3C7 3 2.5 5 1 8c1.5 3 6 5 11 5s9.5-2 11-5c-1.5-3-6-5-11-5z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="7" width="18" height="10" rx="2" opacity=".3"/><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="21" y="10" width="2" height="4" rx="1"/></svg>
+      </div>
+    </div>
+    <div id="content"></div>
+    <div id="bottom-nav-container"></div>
+  </div>
+  <div id="home-indicator"></div>
+</div>
+<div class="side-note" style="justify-self:end"></div>
+</div>
+
+<div id="toast"></div>
+<div id="sheet" class="sheet"></div>
+<div id="backdrop" class="backdrop"></div>
+
+<script>
+/* ============================================================ DATA */
+const D = {
+  cats:[
+    {id:'all',name:'Semua',icon:'🛍️'},
+    {id:'food',name:'Makanan',icon:'🍜'},
+    {id:'jastip',name:'Jastip',icon:'✈️'},
+    {id:'laundry',name:'Laundry',icon:'🧺'},
+    {id:'print',name:'Print',icon:'🖨️'},
+    {id:'merch',name:'Merch',icon:'👕'},
+  ],
+  pos:[
+    {id:'po1',title:'PO Mie Gacoan Level 2',seller:'Andi Pratama',sellerId:'sl1',cat:'food',catName:'Makanan',price:18000,quota:30,taken:18,deadline:'7 Nov',rating:4.8,reviews:42,status:'open',featured:true,img:'🍜',desc:'PO mie gacoan level 2, isi 10 porsi. Pick up di parkiran FT. Bawa wadah sendiri dapat diskon Rp2.000.',eco:true},
+    {id:'po2',title:'Jastip Shopee Malemall',seller:'Sinta Wulandari',sellerId:'sl2',cat:'jastip',catName:'Jastip',price:25000,quota:15,taken:9,deadline:'10 Nov',rating:4.9,reviews:28,status:'open',featured:true,img:'✈️',desc:'Jasa titip belanja Shopee, maksimal 3 item per slot. Estimasi tiba 5-7 hari. COD di kampus.',eco:false},
+    {id:'po3',title:'Laundry Kiloan Hemat',seller:'Budi Santoso',sellerId:'sl3',cat:'laundry',catName:'Laundry',price:7000,quota:50,taken:22,deadline:'Open',rating:4.7,reviews:35,status:'open',featured:false,img:'🧺',desc:'Laundry kiloan reguler, 3 hari jadi. Cuci + setrika. Min 2kg. Pick up & antar ke kos.',eco:false},
+    {id:'po4',title:'Print Dokumen A4',seller:'Citra Lestari',sellerId:'sl4',cat:'print',catName:'Print',price:500,quota:100,taken:40,deadline:'Open',rating:4.6,reviews:51,status:'open',featured:false,img:'🖨️',desc:'Print hitam putih A4, Rp500/lembar. Minimal 10 lembar. Kirim file via chat, ambil di TIC.',eco:false},
+    {id:'po5',title:'PO Seblak Ceker Level 5',seller:'Andi Pratama',sellerId:'sl1',cat:'food',catName:'Makanan',price:15000,quota:25,taken:25,deadline:'Closed',rating:4.5,reviews:20,status:'closed',featured:false,img:'🍲',desc:'Seblak ceker level 5, pedasnya mantap. Bawa wadah sendiri diskon Rp1.000.',eco:true},
+    {id:'po6',title:'Merch Hoodie Polinema',seller:'Dimas Arya',sellerId:'sl5',cat:'merch',catName:'Merch',price:85000,quota:20,taken:5,deadline:'15 Nov',rating:4.9,reviews:12,status:'open',featured:false,img:'👕',desc:'Hoodie Polinema edisi terbatas, bahan fleece premium. Size S-XXL. Estimasi jadi 7 hari.',eco:false},
+    {id:'po7',title:'Jastip Erigo Store',seller:'Sinta Wulandari',sellerId:'sl2',cat:'jastip',catName:'Jastip',price:20000,quota:10,taken:3,deadline:'12 Nov',rating:4.8,reviews:18,status:'open',featured:false,img:'🛍️',desc:'Jastip Erigo Store, gratis ongkir untuk pembelian di atas Rp300rb. Maksimal 5 item per slot.',eco:false},
+  ],
+  sellers:[
+    {id:'sl1',name:'Andi Pratama',avatar:'A',badge:'free',rating:4.7,reviews:62,orders:84,joined:'Sep 2026',pro:false},
+    {id:'sl2',name:'Sinta Wulandari',avatar:'S',badge:'pro',rating:4.9,reviews:46,orders:58,joined:'Agu 2026',pro:true},
+    {id:'sl3',name:'Budi Santoso',avatar:'B',badge:'free',rating:4.6,reviews:35,orders:40,joined:'Sep 2026',pro:false},
+    {id:'sl4',name:'Citra Lestari',avatar:'C',badge:'free',rating:4.5,reviews:51,orders:60,joined:'Okt 2026',pro:false},
+    {id:'sl5',name:'Dimas Arya',avatar:'D',badge:'pro',rating:4.9,reviews:12,orders:15,joined:'Okt 2026',pro:true},
+  ],
+  reviews:[
+    {name:'Rizki',avatar:'R',rating:5,date:'2 Nov','text':'PO cepat, penjual ramah, makanannya enak. Bawa wadah sendiri dapat diskon juga. Recommended!'},
+    {name:'Maya',avatar:'M',rating:5,date:'28 Okt','text':'Pelayanan cepat, harga sesuai. Lanjutkan!'},
+    {name:'Fahmi',avatar:'F',rating:4,date:'25 Okt','text':'Mantap, tapi pengiriman agak telat 30 menit. Selebihnya oke.'},
+    {name:'Dewi',avatar:'D',rating:5,date:'20 Okt','text':'Aman banget, dana ditahan jadi gak khawatir ditipu. Pasti pesan lagi!'},
+  ],
+  orders:[
+    {id:'NM-1024',poId:'po1',title:'PO Mie Gacoan Level 2',seller:'Andi Pratama',qty:2,price:18000,total:36000,status:'diproses',date:'4 Nov',step:2},
+    {id:'NM-1023',poId:'po3',title:'Laundry Kiloan Hemat',seller:'Budi Santoso',qty:3,price:7000,total:21000,status:'selesai',date:'1 Nov',step:4,canRate:true},
+  ],
+  pendingSellers:[
+    {id:'sv1',name:'Eka Putra',avatar:'E',submitted:'3 Nov',doc:'KTM_2025.pdf',cat:'Makanan'},
+    {id:'sv2',name:'Lina Marlina',avatar:'L',submitted:'2 Nov',doc:'KTM_2024.jpg',cat:'Jastip'},
+  ],
+  reports:[
+    {id:'RP-01',order:'NM-1022',buyer:'Rizki',seller:'Budi Santoso',reason:'Barang tidak sesuai deskripsi',amount:21000,detail:'Seblak yang datang bukan level 5, malah level 1. Penjual bilang habis stok.',status:'pending'},
+  ],
+  user:{name:'Rizki Rahman',avatar:'R',email:'rizki@student.polinema.ac.id',isSeller:false,sellerVerified:false},
+  escrow:{balance:36000},
+  cart:{poId:null,qty:1,note:''},
+  filters:{cat:'all',openOnly:false,maxPrice:100000},
+};
+
+/* ============================================================ HELPERS */
+const $=(s,el=document)=>el.querySelector(s);
+const $$=(s,el=document)=>[...el.querySelectorAll(s)];
+const money=n=>'Rp'+n.toLocaleString('id-ID');
+const toast=(msg,type='')=>{const t=$('#toast');t.textContent=msg;t.className=type+' show';setTimeout(()=>t.classList.remove('show'),2200)};
+const setScreenInd=name=>{const el=$('#screen-ind-name');if(el)el.textContent=name};
+
+function showScreen(id){
+  $$('.screen').forEach(s=>s.classList.remove('active'));
+  const sc=$('#'+id);
+  if(sc){sc.classList.add('active');setScreenInd(id.replace('screen-',''));$('#content').scrollTop=0;}
+  else console.warn('Screen not found:',id);
+  renderBottomNav();
+}
+
+function openSheet(html){
+  $('#sheet').innerHTML=html;
+  $('#sheet').classList.add('active');
+  $('#backdrop').classList.add('active');
+}
+function closeSheet(){
+  $('#sheet').classList.remove('active');
+  $('#backdrop').classList.remove('active');
+}
+$('#backdrop').addEventListener('click',closeSheet);
+
+function navigate(id){closeSheet();showScreen(id);}
+
+/* ============================================================ RENDER: STATUS BAR TIME */
+function updateTime(){
+  const now=new Date();
+  const h=now.getHours();
+  const m=String(now.getMinutes()).padStart(2,'0');
+  $('#sb-time').textContent=`${h}:${m}`;
+}
+setInterval(updateTime,30000);updateTime();
+
+/* ============================================================ SCREENS DEFINITIONS */
+const screens={};
+
+/* --- 1. LOGIN --- */
+screens['login']=()=>`
+<div class="screen active" id="screen-login">
+  <div style="padding:30px 0 10px;text-align:center">
+    <div class="logo" style="justify-content:center;margin-bottom:8px">
+      <div class="mark" style="width:52px;height:52px;font-size:26px;border-radius:14px">N</div>
+    </div>
+    <h1 style="font-size:28px;font-weight:800;letter-spacing:-.5px;margin-top:8px">Ne<span style="color:var(--green-600)">Mart</span></h1>
+    <p class="text-muted text-sm mt-1">Usaha mahasiswa, satu tempat, transaksi aman</p>
+  </div>
+
+  <div style="margin:30px 0">
+    <div class="input-group">
+      <label>Email Kampus</label>
+      <input class="input" type="email" placeholder="nama@student.polinema.ac.id" value="rizki@student.polinema.ac.id">
+    </div>
+    <div class="input-group">
+      <label>Kata Sandi</label>
+      <input class="input" type="password" placeholder="••••••••" value="demo1234">
+    </div>
+    <button class="btn btn-primary btn-lg mt-2" onclick="navigate('beranda')">Masuk</button>
+    <p class="text-center text-sm text-muted mt-3">Belum punya akun? <a style="color:var(--green-600);font-weight:600;cursor:pointer" onclick="navigate('daftar')">Daftar</a></p>
+  </div>
+
+  <div class="divider" style="margin:24px 0"></div>
+  <p class="text-center text-xs text-muted">Atau masuk cepat dengan</p>
+  <button class="btn btn-outline mt-3" onclick="toast('Login SSO Polinema (simulasi)','success');navigate('beranda')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    SSO Polinema
+  </button>
+
+  <div class="info-card mt-6" style="background:var(--blue-50)">
+    <div class="ic">🔒</div>
+    <div class="body"><h4 style="color:var(--blue-500)">Dana ditahan (escrow)</h4><p>Pembayaran kamu aman. Dana hanya cair ke penjual setelah kamu konfirmasi pesanan diterima.</p></div>
+  </div>
+</div>`;
+
+/* --- 1b. DAFTAR --- */
+screens['daftar']=()=>`
+<div class="screen active" id="screen-daftar">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('login')">‹</button>
+    <h1>Daftar Akun</h1>
+  </div>
+  <div class="input-group"><label>Nama Lengkap</label><input class="input" placeholder="Nama kamu" value="Rizki Rahman"></div>
+  <div class="input-group"><label>Email Kampus</label><input class="input" type="email" placeholder="nama@student.polinema.ac.id"></div>
+  <div class="input-group"><label>Kata Sandi</label><input class="input" type="password" placeholder="Minimal 8 karakter"></div>
+  <div class="input-group"><label>Konfirmasi Sandi</label><input class="input" type="password" placeholder="Ulangi sandi"></div>
+  <button class="btn btn-primary btn-lg mt-2" onclick="toast('Akun dibuat (simulasi)','success');navigate('login')">Daftar</button>
+  <p class="text-center text-sm text-muted mt-3">Sudah punya akun? <a style="color:var(--green-600);font-weight:600;cursor:pointer" onclick="navigate('login')">Masuk</a></p>
+</div>`;
+
+/* --- 2. BERANDA --- */
+screens['beranda']=()=>{
+  const featured=D.pos.filter(p=>p.featured&&p.status==='open').slice(0,4);
+  const open=D.pos.filter(p=>p.status==='open');
+  return `
+<div class="screen active" id="screen-beranda">
+  <div class="flex justify-between items-center mb-3" style="padding-top:4px">
+    <div class="logo"><div class="mark">N</div><div class="text">Ne<span class="accent">Mart</span></div></div>
+    <div class="flex gap-2">
+      <button class="btn-icon" onclick="toast('Notifikasi (simulasi)')">🔔</button>
+      <button class="btn-icon" onclick="navigate('profile')">👤</button>
+    </div>
+  </div>
+
+  <div class="search-bar" onclick="navigate('search')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <span>Cari PO, makanan, jastip, laundry...</span>
+  </div>
+
+  <div class="cat-row">
+    ${D.cats.map(c=>`<div class="pill ${D.filters.cat===c.id?'active':''}" onclick="setCat('${c.id}')">${c.icon} ${c.name}</div>`).join('')}
+  </div>
+
+  ${featured.length?`
+  <div class="sec-head"><h2>⭐ PO Pilihan (Featured)</h2></div>
+  <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;margin:-4px -18px;padding-left:18px;padding-right:18px">
+    ${featured.map(p=>`
+      <div style="min-width:200px;max-width:200px;background:white;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer" onclick="openDetail('${p.id}')">
+        <div class="img ${p.cat}" style="height:100px;font-size:36px;border-radius:0">
+          <span class="status-badge open">● Open</span>
+        </div>
+        <div style="padding:10px 12px">
+          <h3 style="font-size:13px;font-weight:700;line-height:1.3;margin-bottom:4px">${p.title}</h3>
+          <p style="font-size:11px;color:var(--gray-500);margin-bottom:6px">${p.seller}</p>
+          <p style="font-size:14px;font-weight:800;color:var(--green-600)">${money(p.price)}</p>
+        </div>
+      </div>
+    `).join('')}
+  </div>`:''}
+
+  <div class="sec-head"><h2>PO Aktif</h2><a onclick="navigate('search')">Lihat semua →</a></div>
+  ${open.map(p=>poCardHTML(p)).join('')}
+
+  <div class="info-card mt-4" style="background:var(--amber-50)">
+    <div class="ic">🌱</div>
+    <div class="body"><h4 style="color:var(--amber-400)">Dampak NeMart</h4><p>Setiap transaksi di NeMart membantu UMKM kampus tumbuh. Lihat rekap omzet penjual di profil mereka.</p></div>
+  </div>
+</div>`;
+};
+
+function poCardHTML(p){
+  const left=p.quota-p.taken;
+  return `
+  <div class="po-card" onclick="openDetail('${p.id}')">
+    <div class="img ${p.cat}">
+      <span style="font-size:42px">${p.img}</span>
+      <span class="status-badge ${p.status}">${p.status==='open'?'● Open':'Closed'}</span>
+      ${p.featured?`<span class="featured-tag">⭐ Featured</span>`:''}
+    </div>
+    <div class="info">
+      <h3>${p.title}</h3>
+      <div class="seller">${p.seller} ${p.eco?'<span class="badge badge-green" style="margin-left:4px">🌱 Bawa wadah</span>':''}</div>
+      <div class="price">${money(p.price)}</div>
+      <div class="meta">
+        <span>📦 Sisa ${left}/${p.quota}</span>
+        <span class="rating">★ ${p.rating} (${p.reviews})</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function setCat(id){
+  D.filters.cat=id;
+  navigate('search');
+}
+
+/* --- 3. SEARCH --- */
+screens['search']=()=>`
+<div class="screen active" id="screen-search">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('beranda')">‹</button>
+    <h1 class="small">Cari & Filter</h1>
+  </div>
+
+  <div class="search-bar" style="margin-bottom:12px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" placeholder="Cari PO..." value="" oninput="D.searchQuery=this.value;renderSearchResults()" style="border:none;background:none;font-size:14px;font-family:inherit;outline:none;flex:1;color:var(--gray-800)">
+  </div>
+
+  <div class="cat-row" style="padding-bottom:8px">
+    ${D.cats.map(c=>`<div class="pill ${D.filters.cat===c.id?'active':''}" onclick="D.filters.cat='${c.id}';renderSearchResults()">${c.icon} ${c.name}</div>`).join('')}
+  </div>
+
+  <div class="flex gap-2 mb-3">
+    <div class="filter-chip ${D.filters.openOnly?'active':''}" onclick="D.filters.openOnly=!D.filters.openOnly;renderSearchResults()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+      Hanya Open
+    </div>
+    <div class="filter-chip" onclick="openPriceFilter()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      Max ${money(D.filters.maxPrice)}
+    </div>
+  </div>
+
+  <div id="search-results"></div>
+</div>`;
+
+function renderSearchResults(){
+  const container=$('#search-results');
+  if(!container)return;
+  let list=D.pos.slice();
+  if(D.searchQuery){
+    const q=D.searchQuery.toLowerCase();
+    list=list.filter(p=>p.title.toLowerCase().includes(q)||p.seller.toLowerCase().includes(q));
+  }
+  if(D.filters.cat!=='all')list=list.filter(p=>p.cat===D.filters.cat);
+  if(D.filters.openOnly)list=list.filter(p=>p.status==='open');
+  list=list.filter(p=>p.price<=D.filters.maxPrice);
+
+  if(list.length===0){
+    container.innerHTML=`<div class="empty-state"><div class="ico">🔍</div><h3>Tidak ada hasil</h3><p class="text-sm">Coba ubah filter atau kata kunci</p></div>`;
+    return;
+  }
+  container.innerHTML=`<p class="text-sm text-muted mb-3">${list.length} PO ditemukan</p>${list.map(p=>poCardHTML(p)).join('')}`;
+}
+
+function openPriceFilter(){
+  openSheet(`
+    <div class="grab"></div>
+    <button class="sheet-close" onclick="closeSheet()">×</button>
+    <div class="sheet-head">Filter Harga Maksimal</div>
+    <div class="sheet-body">
+      <input type="range" min="1000" max="100000" step="1000" value="${D.filters.maxPrice}" oninput="document.getElementById('price-val').textContent=money(this.value)" style="width:100%;accent-color:var(--green-600)">
+      <p class="text-center font-bold text-lg mt-2" id="price-val">${money(D.filters.maxPrice)}</p>
+      <button class="btn btn-primary mt-4" onclick="D.filters.maxPrice=parseInt(document.querySelector('#sheet input[type=range]').value);closeSheet();renderSearchResults();">Terapkan</button>
+    </div>
+  `);
+}
+
+/* --- 4. DETAIL PO --- */
+function openDetail(id){
+  D.detailId=id;
+  navigate('detail');
+}
+screens['detail']=()=>{
+  const p=D.pos.find(x=>x.id===D.detailId);
+  if(!p)return'<div class="screen active">PO tidak ditemukan</div>';
+  const left=p.quota-p.taken;
+  const pct=(p.taken/p.quota*100).toFixed(0);
+  return `
+<div class="screen active" id="screen-detail">
+  <div class="topbar" style="position:absolute;top:0;left:0;right:0;z-index:10;background:linear-gradient(to bottom,rgba(255,255,255,.9),transparent);margin:0;padding:8px 14px">
+    <button class="icon-btn" style="background:rgba(255,255,255,.9)" onclick="navigate('beranda')">‹</button>
+    <div style="flex:1"></div>
+    <button class="icon-btn" style="background:rgba(255,255,255,.9)" onclick="toast('Dibagikan (simulasi)')">↗</button>
+  </div>
+
+  <div class="img ${p.cat}" style="height:220px;font-size:72px;border-radius:0;margin:-16px -18px 0;position:relative">
+    <span>${p.img}</span>
+    <span class="status-badge ${p.status}" style="top:60px">${p.status==='open'?'● Open':'Closed'}</span>
+  </div>
+
+  <div style="padding:16px 0 0">
+    <div class="flex justify-between items-start mb-2">
+      <h1 style="font-size:20px;font-weight:800;flex:1;line-height:1.3">${p.title}</h1>
+      <span class="badge ${p.status==='open'?'badge-green':'badge-gray'}">${p.status==='open'?'Bisa dipesan':'Closed'}</span>
+    </div>
+    <div class="text-2xl font-extrabold" style="color:var(--green-600)">${money(p.price)}</div>
+
+    <div class="flex items-center gap-2 mt-3" onclick="openSeller('${p.sellerId}')" style="cursor:pointer">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--green-500),var(--teal-500));display:flex;align-items:center;justify-content:center;color:white;font-weight:700">${p.seller[0]}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${p.seller} ${D.sellers.find(s=>s.id===p.sellerId).pro?'<span class="tag-pro">PRO</span>':''}</div>
+        <div style="font-size:11px;color:var(--gray-500)">★ ${p.rating} · ${p.reviews} ulasan</div>
+      </div>
+      <span class="text-sm" style="color:var(--green-600);font-weight:600">Profil →</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3 style="font-size:14px;font-weight:700;margin-bottom:8px">Deskripsi</h3>
+    <p class="text-sm" style="line-height:1.6;color:var(--gray-600)">${p.desc}</p>
+
+    ${p.eco?`
+    <div class="info-card mt-3" style="background:var(--green-50)">
+      <div class="ic">🌱</div>
+      <div class="body"><h4 style="color:var(--green-700)">Opsi ramah lingkungan</h4><p>Penjual ini menerima wadah sendiri. Bawa wadah sendiri dan dapat diskon langsung dari penjual.</p></div>
+    </div>`:''}
+
+    <div class="divider"></div>
+
+    <h3 style="font-size:14px;font-weight:700;margin-bottom:10px">Kuota & Deadline</h3>
+    <div style="background:var(--gray-50);border-radius:12px;padding:14px">
+      <div class="flex justify-between text-sm mb-2"><span class="text-muted">Kuota terisi</span><span class="font-bold">${p.taken}/${p.quota}</span></div>
+      <div style="height:8px;background:var(--gray-200);border-radius:4px;overflow:hidden">
+        <div style="width:${pct}%;height:100%;background:linear-gradient(to right,var(--green-500),var(--teal-500));border-radius:4px"></div>
+      </div>
+      <div class="flex justify-between text-sm mt-3"><span class="text-muted">⏰ Deadline</span><span class="font-bold">${p.deadline}</span></div>
+      <div class="flex justify-between text-sm mt-1"><span class="text-muted">📦 Tersisa</span><span class="font-bold">${left} slot</span></div>
+    </div>
+
+    <div class="divider"></div>
+    <h3 style="font-size:14px;font-weight:700;margin-bottom:10px">Ulasan</h3>
+    ${D.reviews.map(r=>`
+      <div class="rv-card">
+        <div class="rh">
+          <div class="av">${r.avatar}</div>
+          <div style="flex:1">
+            <div class="nm">${r.name}</div>
+            <div class="dt">${r.date}</div>
+          </div>
+          <div style="color:var(--amber-400);font-size:12px">★ ${r.rating}.0</div>
+        </div>
+        <p class="rt">${r.text}</p>
+      </div>
+    `).join('')}
+  </div>
+
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:390px;padding:14px 18px 26px;background:white;border-top:1px solid var(--gray-200);z-index:50;box-sizing:border-box">
+    ${left>0&&p.status==='open'?
+      `<button class="btn btn-primary btn-lg" onclick="startCheckout('${p.id}')">Pesan Sekarang · ${money(p.price)}</button>`:
+      `<button class="btn btn-outline" disabled>Kuota penuh / PO closed</button>`}
+  </div>
+</div>`;
+};
+
+/* --- 5. PROFIL PENJUAL --- */
+function openSeller(id){D.sellerViewId=id;navigate('seller-profile');}
+screens['seller-profile']=()=>{
+  const s=D.sellers.find(x=>x.id===D.sellerViewId);
+  if(!s)return'<div class="screen active">Penjual tidak ditemukan</div>';
+  const sellerPOs=D.pos.filter(p=>p.sellerId===s.id);
+  const omzet=sellerPOs.reduce((sum,p)=>sum+(p.taken*p.price),0);
+  return `
+<div class="screen active" id="screen-seller-profile">
+  <div class="topbar">
+    <button class="icon-btn" onclick="history.back();navigate('detail')">‹</button>
+    <h1 class="small">Profil Penjual</h1>
+  </div>
+
+  <div style="text-align:center;padding:8px 0 16px">
+    <div class="profile-img">${s.avatar}</div>
+    <h2 style="font-size:20px;font-weight:800">${s.name} ${s.pro?'<span class="tag-pro">PRO</span>':''}</h2>
+    <p class="text-sm text-muted">Bergabung ${s.joined}</p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-ic" style="background:var(--amber-50)">⭐</div>
+      <div class="stat-val">${s.rating}</div>
+      <div class="stat-lbl">Rating rata-rata</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-ic" style="background:var(--blue-50)">📦</div>
+      <div class="stat-val">${s.orders}</div>
+      <div class="stat-lbl">Total transaksi</div>
+    </div>
+  </div>
+
+  <div class="info-card" style="background:var(--green-50)">
+    <div class="ic">📊</div>
+    <div class="body"><h4 style="color:var(--green-700)">Dampak ekonomi (SDG 8)</h4><p>Total omzet ${s.name}: <strong>${money(omzet)}</strong> dari ${sellerPOs.length} PO aktif.</p></div>
+  </div>
+
+  <div class="sec-head"><h2>PO dari ${s.name}</h2></div>
+  ${sellerPOs.map(p=>poCardHTML(p)).join('')||'<p class="text-muted text-sm">Belum ada PO</p>'}
+
+  <div class="sec-head"><h2>Ulasan pembeli</h2></div>
+  ${D.reviews.map(r=>`
+    <div class="rv-card">
+      <div class="rh">
+        <div class="av">${r.avatar}</div>
+        <div style="flex:1"><div class="nm">${r.name}</div><div class="dt">${r.date}</div></div>
+        <div style="color:var(--amber-400);font-size:12px">★ ${r.rating}.0</div>
+      </div>
+      <p class="rt">${r.text}</p>
+    </div>
+  `).join('')}
+</div>`;
+};
+
+/* --- 6. CHECKOUT --- */
+function startCheckout(id){
+  D.cart={poId:id,qty:1,note:''};
+  navigate('checkout');
+}
+screens['checkout']=()=>{
+  const p=D.pos.find(x=>x.id===D.cart.poId);
+  if(!p)return'<div class="screen active">PO tidak ditemukan</div>';
+  const left=p.quota-p.taken;
+  const sub=p.price*D.cart.qty;
+  const fee=Math.round(sub*0.007);
+  const total=sub+fee;
+  return `
+<div class="screen active" id="screen-checkout">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('detail')">‹</button>
+    <h1 class="small">Checkout</h1>
+  </div>
+
+  <div class="po-card" style="margin-bottom:16px;cursor:default">
+    <div style="padding:14px">
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:4px">${p.title}</h3>
+      <p class="text-sm text-muted">${p.seller} · ${money(p.price)}/item</p>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>Jumlah Pesanan</label>
+    <div class="qty-stepper">
+      <button onclick="updateQty(${Math.max(1,D.cart.qty-1)})">−</button>
+      <span class="val">${D.cart.qty}</span>
+      <button onclick="updateQty(${Math.min(left,D.cart.qty+1)})">+</button>
+      <span class="text-sm text-muted" style="margin-left:8px">Maks ${left}</span>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>Catatan untuk Penjual</label>
+    <textarea class="input" placeholder="Misal: level pedas, alamat pick up, jam ambil..." oninput="D.cart.note=this.value">${D.cart.note}</textarea>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="font-size:14px;font-weight:700;margin-bottom:10px">Ringkasan Pembayaran</h3>
+  <div style="background:var(--gray-50);border-radius:12px;padding:14px">
+    <div class="flex justify-between text-sm mb-2"><span class="text-muted">Subtotal (${D.cart.qty} × ${money(p.price)})</span><span class="font-bold">${money(sub)}</span></div>
+    <div class="flex justify-between text-sm mb-2"><span class="text-muted">Biaya QRIS (MDR 0.7%)</span><span>${money(fee)}</span></div>
+    <div style="height:1px;background:var(--gray-200);margin:8px 0"></div>
+    <div class="flex justify-between"><span class="font-bold">Total Bayar</span><span class="font-bold" style="color:var(--green-600);font-size:18px">${money(total)}</span></div>
+  </div>
+
+  <div class="info-card mt-3" style="background:var(--blue-50)">
+    <div class="ic">🔒</div>
+    <div class="body"><h4 style="color:var(--blue-500)">Dana ditahan (escrow)</h4><p>Setelah bayar, dana ${money(total)} ditahan oleh sistem. Dana hanya cair ke penjual setelah kamu konfirmasi pesanan diterima.</p></div>
+  </div>
+
+  <button class="btn btn-primary btn-lg mt-4" onclick="pay(${total})">Bayar dengan QRIS · ${money(total)}</button>
+</div>`;
+};
+function updateQty(n){D.cart.qty=n;navigate('checkout');}
+
+/* --- 7. QRIS PAYMENT --- */
+function pay(amount){D.payAmount=amount;navigate('qris');}
+screens['qris']=()=>`
+<div class="screen active" id="screen-qris">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('checkout')">‹</button>
+    <h1 class="small center">Pembayaran QRIS</h1>
+  </div>
+
+  <div style="text-align:center;padding:12px 0">
+    <div class="qr-box">
+      <div class="qr-pattern"></div>
+    </div>
+    <p class="font-bold text-lg mt-3">Scan untuk membayar</p>
+    <p class="text-sm text-muted">Atau salin nomor Virtual Account</p>
+    <div style="background:var(--gray-50);border-radius:10px;padding:10px 16px;margin:12px auto;max-width:220px;display:flex;justify-content:space-between;align-items:center">
+      <span class="font-bold text-sm" id="va-num">8801 1024 9988</span>
+      <button onclick="navigator.clipboard?.writeText('880110249988');toast('Nomor VA disalin','success')" style="background:none;border:none;color:var(--green-600);cursor:pointer;font-weight:600;font-size:12px">Salin</button>
+    </div>
+
+    <div style="background:var(--green-50);border-radius:12px;padding:14px;margin:16px 0;text-align:left">
+      <div class="flex justify-between text-sm mb-1"><span class="text-muted">Total Bayar</span><span class="font-bold">${money(D.payAmount)}</span></div>
+      <div class="flex justify-between text-sm"><span class="text-muted">Metode</span><span>QRIS (simulasi)</span></div>
+    </div>
+
+    <div class="info-card" style="background:var(--blue-50);text-align:left">
+      <div class="ic">🔒</div>
+      <div class="body"><h4 style="color:var(--blue-500)">Dana akan ditahan</h4><p>Pembayaran kamu aman. Dana cair ke penjual setelah kamu konfirmasi.</p></div>
+    </div>
+
+    <button class="btn btn-primary btn-lg mt-4" onclick="confirmPayment()">Saya Sudah Bayar (Simulasi)</button>
+    <p class="text-xs text-muted mt-3">QRIS simulasi — tidak ada uang sungguhan yang diproses</p>
+  </div>
+</div>`;
+
+function confirmPayment(){
+  const p=D.pos.find(x=>x.id===D.cart.poId);
+  const newOrder={
+    id:'NM-'+(1025+D.orders.length),
+    poId:p.id,title:p.title,seller:p.seller,qty:D.cart.qty,
+    price:p.price,total:p.price*D.cart.qty,
+    status:'dibayar',date:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short'}),
+    step:1
+  };
+  D.orders.unshift(newOrder);
+  D.escrow.balance+=newOrder.total;
+  p.taken=Math.min(p.quota,p.taken+D.cart.qty);
+  toast('Pembayaran berhasil! Dana ditahan','success');
+  navigate('track');
+}
+
+/* --- 8. STATUS PESANAN --- */
+screens['track']=()=>{
+  const active=D.orders.filter(o=>o.status!=='selesai');
+  const done=D.orders.filter(o=>o.status==='selesai');
+  return `
+<div class="screen active" id="screen-track">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('beranda')">‹</button>
+    <h1 class="small">Pesanan Saya</h1>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this)">Aktif (${active.length})</button>
+    <button class="tab" onclick="switchTab(this)" data-tab="done">Selesai (${done.length})</button>
+  </div>
+
+  <div id="track-active">
+    ${active.length?active.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><div class="ico">📦</div><p>Tidak ada pesanan aktif</p></div>'}
+  </div>
+  <div id="track-done" class="hidden">
+    ${done.length?done.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><div class="ico">✅</div><p>Belum ada pesanan selesai</p></div>'}
+  </div>
+</div>`;
+};
+
+function switchTab(btn){
+  $$('#screen-track .tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  if(btn.dataset.tab==='done'){
+    $('#track-active').classList.add('hidden');
+    $('#track-done').classList.remove('hidden');
+  } else {
+    $('#track-active').classList.remove('hidden');
+    $('#track-done').classList.add('hidden');
+  }
+}
+
+function orderCardHTML(o){
+  const statuses=['Dibayar','Diproses','Siap/Dikirim','Selesai'];
+  return `
+  <div class="order-card" onclick="openOrderDetail('${o.id}')">
+    <div class="oh">
+      <div class="ic">📦</div>
+      <div class="info" style="flex:1">
+        <h4>${o.title}</h4>
+        <p>${o.id} · ${o.qty} × ${money(o.price)}</p>
+        <p class="price">${money(o.total)}</p>
+      </div>
+      <span class="badge ${o.status==='selesai'?'badge-green':'badge-amber'}">${statuses[o.step-1]||o.status}</span>
+    </div>
+    <div class="of">
+      <span class="text-xs text-muted">${o.date}</span>
+      <span class="text-sm" style="color:var(--green-600);font-weight:600">${o.status==='selesai'?(o.canRate?'Beri Rating →':'Lihat Detail →'):'Lacak →'}</span>
+    </div>
+  </div>`;
+}
+
+function openOrderDetail(id){
+  D.orderViewId=id;
+  navigate('order-detail');
+}
+screens['order-detail']=()=>{
+  const o=D.orders.find(x=>x.id===D.orderViewId);
+  if(!o)return'<div class="screen active">Pesanan tidak ditemukan</div>';
+  const statuses=['Dibayar','Diproses','Siap/Dikirim','Selesai'];
+  const statusesEn=['dibayar','diproses','siap','selesai'];
+  return `
+<div class="screen active" id="screen-order-detail">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('track')">‹</button>
+    <h1 class="small">Detail Pesanan</h1>
+  </div>
+
+  <div class="order-card" style="cursor:default">
+    <div class="oh">
+      <div class="ic">📦</div>
+      <div class="info" style="flex:1">
+        <h4>${o.title}</h4>
+        <p>${o.id} · ${o.date}</p>
+        <p class="price">${money(o.total)}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-head"><h2>Status Pesanan</h2></div>
+  <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow-sm);margin-bottom:16px">
+    <div class="timeline">
+      ${statuses.map((s,i)=>`
+        <div class="tl-item ${i<o.step?'done':''} ${i===o.step-1?'current':''}">
+          <div class="dot"></div>
+          <div class="tl-title">${s}</div>
+          <div class="tl-time">${i<o.step?'Selesai':i===o.step-1?'Sedang berlangsung':'Menunggu'}</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+
+  <div style="background:var(--blue-50);border-radius:12px;padding:14px;margin-bottom:16px">
+    <div class="flex items-center gap-2 mb-1"><span>🔒</span><strong style="color:var(--blue-500)">Status Dana</strong></div>
+    ${o.status==='selesai'?
+      `<p class="text-sm text-muted">Dana ${money(o.total)} sudah cair ke penjual (dikurangi komisi).</p>`:
+      `<p class="text-sm text-muted">Dana ${money(o.total)} sedang ditahan. Akan cair ke penjual setelah kamu konfirmasi.</p>`}
+  </div>
+
+  <div class="sec-head"><h2>Detail</h2></div>
+  <div style="background:white;border-radius:12px;padding:14px;box-shadow:var(--shadow-sm)">
+    <div class="flex justify-between text-sm mb-2"><span class="text-muted">Penjual</span><span class="font-bold">${o.seller}</span></div>
+    <div class="flex justify-between text-sm mb-2"><span class="text-muted">Jumlah</span><span class="font-bold">${o.qty} item</span></div>
+    <div class="flex justify-between text-sm mb-2"><span class="text-muted">Subtotal</span><span>${money(o.total)}</span></div>
+    <div class="flex justify-between text-sm"><span class="text-muted">Status</span><span class="badge badge-amber">${statuses[o.step-1]}</span></div>
+  </div>
+
+  <div style="margin-top:16px">
+    ${o.status==='dibayar'||o.status==='diproses'?`
+      <button class="btn btn-primary mt-2" onclick="confirmReceive('${o.id}')">Konfirmasi Pesanan Diterima</button>
+      <button class="btn btn-danger mt-2" onclick="openReport('${o.id}')">Laporkan Masalah</button>
+    `:''}
+    ${o.status==='siap'?`
+      <button class="btn btn-primary mt-2" onclick="confirmReceive('${o.id}')">Konfirmasi Pesanan Diterima</button>
+    `:''}
+    ${o.status==='selesai'&&o.canRate?`
+      <button class="btn btn-amber mt-2" onclick="openRating('${o.id}')">⭐ Beri Rating & Ulasan</button>
+    `:''}
+    ${o.status==='selesai'&&!o.canRate?`
+      <div class="info-card" style="background:var(--green-50)"><div class="ic">✅</div><div class="body"><h4 style="color:var(--green-700)">Sudah dirating</h4><p>Terima kasih atas ulasanmu!</p></div></div>
+    `:''}
+  </div>
+</div>`;
+};
+
+function confirmReceive(id){
+  const o=D.orders.find(x=>x.id===id);
+  if(!o)return;
+  o.status='selesai';o.step=4;
+  D.escrow.balance-=o.total;
+  toast('Pesanan dikonfirmasi! Dana cair ke penjual','success');
+  navigate('order-detail');
+}
+
+/* --- REPORT --- */
+function openReport(id){
+  D.reportOrderId=id;
+  openSheet(`
+    <div class="grab"></div>
+    <button class="sheet-close" onclick="closeSheet()">×</button>
+    <div class="sheet-head">Laporkan Masalah</div>
+    <div class="sheet-body">
+      <p class="text-sm text-muted mb-3">Pilih alasan laporan. Admin akan meninjau dan memutuskan apakah dana kembali ke pembeli atau cair ke penjual.</p>
+      ${['Barang tidak sesuai deskripsi','Barang rusak/cacat','Penjual tidak merespons','Pengiriman terlalu lama','Lainnya'].map(r=>`
+        <label style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--gray-50);border-radius:10px;margin-bottom:8px;cursor:pointer">
+          <input type="radio" name="reason" value="${r}" style="accent-color:var(--green-600)">
+          <span class="text-sm">${r}</span>
+        </label>
+      `).join('')}
+      <div class="input-group mt-3"><label>Detail Laporan</label><textarea class="input" placeholder="Jelaskan masalahmu..."></textarea></div>
+      <button class="btn btn-danger mt-2" onclick="submitReport()">Kirim Laporan</button>
+    </div>
+  `);
+}
+function submitReport(){
+  const o=D.orders.find(x=>x.id===D.reportOrderId);
+  if(o){o.status='sengketa';}
+  D.reports.unshift({
+    id:'RP-0'+(D.reports.length+1),order:o.id,buyer:D.user.name,seller:o.seller,
+    reason:'Barang tidak sesuai',amount:o.total,detail:'Laporan dari pembeli via app',status:'pending'
+  });
+  closeSheet();
+  toast('Laporan dikirim. Admin akan meninjau.','success');
+  navigate('order-detail');
+}
+
+/* --- 9. RATING --- */
+function openRating(id){D.rateOrderId=id;navigate('rating');}
+screens['rating']=()=>{
+  const o=D.orders.find(x=>x.id===D.rateOrderId);
+  if(!o)return'<div class="screen active">Pesanan tidak ditemukan</div>';
+  D.rating=0;D.reviewText='';
+  return `
+<div class="screen active" id="screen-rating">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('order-detail')">‹</button>
+    <h1 class="small">Beri Rating</h1>
+  </div>
+
+  <div style="text-align:center;padding:20px 0">
+    <div class="profile-img" style="width:60px;height:60px;font-size:24px;margin-bottom:8px">${o.seller[0]}</div>
+    <h2 style="font-size:16px;font-weight:700">${o.title}</h2>
+    <p class="text-sm text-muted">${o.seller} · ${o.id}</p>
+  </div>
+
+  <div style="text-align:center;padding:20px 0">
+    <p class="font-bold text-lg mb-3">Bagaimana pengalamanmu?</p>
+    <div class="star-rating" id="star-rating">
+      ${[1,2,3,4,5].map(i=>`<span class="star" data-val="${i}" onclick="setRating(${i})">★</span>`).join('')}
+    </div>
+    <p class="text-sm text-muted mt-2" id="rating-label">Klik bintang untuk memberi nilai</p>
+  </div>
+
+  <div class="input-group">
+    <label>Ulasan</label>
+    <textarea class="input" placeholder="Bagikan pengalamanmu..." oninput="D.reviewText=this.value" style="min-height:100px"></textarea>
+  </div>
+
+  <div class="info-card" style="background:var(--green-50)">
+    <div class="ic">📊</div>
+    <div class="body"><h4 style="color:var(--green-700)">Rating adil & terverifikasi</h4><p>Rating hanya bisa diberikan untuk transaksi yang selesai lewat NeMart. Ini memastikan ulasan jujur.</p></div>
+  </div>
+
+  <button class="btn btn-primary btn-lg mt-4" onclick="submitRating('${o.id}')">Kirim Rating</button>
+</div>`;
+};
+
+function setRating(n){
+  D.rating=n;
+  $$('#star-rating .star').forEach(s=>{
+    s.classList.toggle('active',parseInt(s.dataset.val)<=n);
+  });
+  const labels=['','Sangat buruk','Buruk','Cukup','Bagus','Sangat bagus'];
+  $('#rating-label').textContent=labels[n];
+}
+function submitRating(id){
+  const o=D.orders.find(x=>x.id===id);
+  o.canRate=false;
+  D.reviews.unshift({name:D.user.name,avatar:D.user.avatar[0],rating:D.rating||5,date:'Baru',text:D.reviewText||'Pengalaman yang baik!'});
+  toast('Terima kasih atas ulasanmu!','success');
+  navigate('track');
+}
+
+/* --- 10. PENJUAL: DAFTAR --- */
+screens['seller-register']=()=>`
+<div class="screen active" id="screen-seller-register">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('profile')">‹</button>
+    <h1 class="small">Daftar Jadi Penjual</h1>
+  </div>
+
+  <div class="seller-banner">
+    <div class="ic">🏪</div>
+    <div><h3 style="font-size:16px;font-weight:700">Mulai jualan di NeMart</h3><p class="text-sm" style="opacity:.9">Bebas komisi bulan pertama + 1× boost gratis!</p></div>
+  </div>
+
+  <div class="input-group"><label>Nama Usaha</label><input class="input" placeholder="Misal: Andi Snack" value="Andi Snack"></div>
+  <div class="input-group"><label>Kategori Usaha</label>
+    <select class="input"><option>Makanan & Minuman</option><option>Jastip</option><option>Laundry</option><option>Print</option><option>Merchandise</option></select>
+  </div>
+  <div class="input-group"><label>Nomor WA</label><input class="input" placeholder="08xx" value="08123456789"></div>
+  <div class="input-group"><label>Unggah Bukti Mahasiswa (KTM)</label>
+    <div style="border:2px dashed var(--gray-300);border-radius:12px;padding:20px;text-align:center;cursor:pointer" onclick="this.querySelector('div').textContent='✅ KTM_2025.pdf terunggah';this.style.borderColor='var(--green-500)';this.style.background='var(--green-50)'">
+      <div style="font-size:32px;margin-bottom:8px">📄</div>
+      <div style="font-size:13px;color:var(--gray-500)">Ketuk untuk unggah foto KTM</div>
+      <div style="font-size:12px;color:var(--gray-400)">Format: JPG, PNG, PDF (maks 2MB)</div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-lg mt-2" onclick="submitSellerReg()">Daftar Sebagai Penjual</button>
+</div>`;
+
+function submitSellerReg(){
+  D.user.isSeller=true;
+  D.user.sellerVerified=false;
+  D.pendingSellers.unshift({id:'sv3',name:D.user.name,avatar:D.user.avatar[0],submitted:'Baru',doc:'KTM_2025.pdf',cat:'Makanan'});
+  toast('Pendaftaran terkirim! Menunggu verifikasi admin.','success');
+  navigate('seller-status');
+}
+
+screens['seller-status']=()=>`
+<div class="screen active" id="screen-seller-status">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('profile')">‹</button>
+    <h1 class="small">Status Verifikasi</h1>
+  </div>
+
+  <div style="text-align:center;padding:30px 0">
+    <div style="width:80px;height:80px;border-radius:50%;background:var(--amber-50);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 16px">⏳</div>
+    <h2 style="font-size:18px;font-weight:800">Menunggu Verifikasi</h2>
+    <p class="text-sm text-muted mt-1">Pendaftaranmu sedang ditinjau admin. Biasanya 1×24 jam.</p>
+  </div>
+
+  <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow-sm)">
+    <h3 style="font-size:14px;font-weight:700;margin-bottom:12px">Status Pendaftaran</h3>
+    <div class="flex justify-between text-sm mb-2"><span class="text-muted">Nama Usaha</span><span class="font-bold">Andi Snack</span></div>
+    <div class="flex justify-between text-sm mb-2"><span class="text-muted">Kategori</span><span>Makanan & Minuman</span></div>
+    <div class="flex justify-between text-sm mb-2"><span class="text-muted">Dokumen</span><span>✅ KTM_2025.pdf</span></div>
+    <div class="flex justify-between text-sm"><span class="text-muted">Status</span><span class="badge badge-amber">Menunggu</span></div>
+  </div>
+
+  <div class="info-card mt-4" style="background:var(--blue-50)">
+    <div class="ic">🎁</div>
+    <div class="body"><h4 style="color:var(--blue-500)">Bonus penjual baru</h4><p>Bebas komisi bulan pertama + 1× boost gratis untuk PO pertamamu!</p></div>
+  </div>
+
+  <button class="btn btn-outline mt-4" onclick="simulateVerify()">Simulasi: Admin Verifikasi Sekarang</button>
+</div>`;
+
+function simulateVerify(){
+  D.user.sellerVerified=true;
+  const idx=D.pendingSellers.findIndex(s=>s.name===D.user.name);
+  if(idx>-1)D.pendingSellers.splice(idx,1);
+  toast('Verifikasi disetujui! 🎉','success');
+  navigate('seller-dashboard');
+}
+
+/* --- 11. DASHBOARD PENJUAL --- */
+screens['seller-dashboard']=()=>{
+  if(!D.user.sellerVerified){
+    return `<div class="screen active" id="screen-seller-dashboard">
+      <div class="topbar"><button class="icon-btn" onclick="navigate('profile')">‹</button><h1 class="small">Dasbor Penjual</h1></div>
+      <div class="empty-state"><div class="ic">🔒</div><h3>Belum terverifikasi</h3><p class="text-sm">Akunmu belum diverifikasi admin.</p><button class="btn btn-primary mt-3" onclick="navigate('seller-status')">Cek Status</button></div>
+    </div>`;
+  }
+  const saldoTertahan=D.escrow.balance;
+  const saldoCair=75000;
+  const komisi=Math.round(saldoCair*0.05);
+  const netCair=saldoCair-komisi;
+  return `
+<div class="screen active" id="screen-seller-dashboard">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('profile')">‹</button>
+    <h1 class="small">Dasbor Penjual</h1>
+    <button class="btn-icon" onclick="navigate('seller-plans')">⚡</button>
+  </div>
+
+  <div class="saldo-card">
+    <div class="label">Saldo bisa ditarik</div>
+    <div class="amount">${money(netCair)}</div>
+    <div class="sub">
+      <div><div>Dana tertahan</div><div class="val">${money(saldoTertahan)}</div></div>
+      <div><div>Sudah cair</div><div class="val">${money(saldoCair)}</div></div>
+    </div>
+  </div>
+
+  <button class="btn btn-secondary mt-3" onclick="toast('Tarik saldo (simulasi)','success')">💸 Tarik Saldo</button>
+
+  <div class="sec-head"><h2>Statistik</h2></div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-ic" style="background:var(--green-50)">📦</div><div class="stat-val">${D.orders.length+5}</div><div class="stat-lbl">Total pesanan</div></div>
+    <div class="stat-card"><div class="stat-ic" style="background:var(--blue-50)">🛍️</div><div class="stat-val">${D.pos.length}</div><div class="stat-lbl">PO aktif</div></div>
+    <div class="stat-card"><div class="stat-ic" style="background:var(--amber-50)">⭐</div><div class="stat-val">4.7</div><div class="stat-lbl">Rating</div></div>
+    <div class="stat-card"><div class="stat-ic" style="background:var(--purple-50)">👤</div><div class="stat-val">42</div><div class="stat-lbl">Pembeli terjangkau</div></div>
+  </div>
+
+  <div class="info-card" style="background:var(--green-50)">
+    <div class="ic">📊</div>
+    <div class="body"><h4 style="color:var(--green-700)">Dampak (SDG 8)</h4><p>Total omzet: <strong>${money(125000)}</strong> · Komisi NeMart (5%): <strong>${money(6250)}</strong> · Omzet bersih: <strong>${money(118750)}</strong></p></div>
+  </div>
+
+  <div class="sec-head"><h2>Pesanan Masuk</h2><a onclick="navigate('seller-orders')">Lihat semua →</a></div>
+  ${D.orders.slice(0,3).map(o=>`
+    <div class="order-card" onclick="navigate('seller-orders')">
+      <div class="oh">
+        <div class="ic">📦</div>
+        <div class="info" style="flex:1">
+          <h4>${o.title}</h4><p>${o.id} · ${o.qty} item</p><p class="price">${money(o.total)}</p>
+        </div>
+        <span class="badge badge-amber">${o.status}</span>
+      </div>
+    </div>
+  `).join('')}
+
+  <div class="sec-head"><h2>PO Saya</h2><a onclick="navigate('seller-po-list')">Kelola →</a></div>
+  ${D.pos.filter(p=>p.sellerId==='sl1').map(p=>poCardHTML(p)).join('')}
+
+  <button class="btn btn-primary mt-3" onclick="navigate('seller-create-po')">➕ Buat PO Baru</button>
+  <button class="btn btn-amber mt-2" onclick="navigate('seller-boost')">⚡ Beli Boost</button>
+</div>`;
+};
+
+/* --- PJ-04: KELOLA PESANAN --- */
+screens['seller-orders']=()=>{
+  return `
+<div class="screen active" id="screen-seller-orders">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('seller-dashboard')">‹</button>
+    <h1 class="small">Pesanan Masuk</h1>
+  </div>
+  ${D.orders.map(o=>{
+    const steps=['dibayar','diproses','siap','selesai'];
+    const idx=steps.indexOf(o.status);
+    return `
+    <div class="order-card">
+      <div class="oh">
+        <div class="ic">📦</div>
+        <div class="info" style="flex:1">
+          <h4>${o.title}</h4>
+          <p>${o.id} · ${o.buyer||'Pembeli'} · ${o.qty} item</p>
+          <p class="price">${money(o.total)}</p>
+        </div>
+        <span class="badge badge-amber">${o.status}</span>
+      </div>
+      ${o.status!=='selesai'&&o.status!=='sengketa'?`
+      <div class="of">
+        <span class="text-xs text-muted">Ubah status:</span>
+        <div class="flex gap-2">
+          ${idx<2?`<button class="btn btn-sm btn-primary" onclick="advanceOrder('${o.id}')">→ ${idx===0?'Proses':'Siap/Dikirim'}</button>`:''}
+          ${idx===2?`<button class="btn btn-sm btn-primary" onclick="advanceOrder('${o.id}')">→ Selesai</button>`:''}
+        </div>
+      </div>`:''}
+    </div>
+  `;}).join('')}
+</div>`;
+};
+function advanceOrder(id){
+  const o=D.orders.find(x=>x.id===id);
+  if(!o)return;
+  const steps=['dibayar','diproses','siap','selesai'];
+  const idx=steps.indexOf(o.status);
+  if(idx<3){o.status=steps[idx+1];o.step=idx+2;toast('Status diperbarui: '+o.status,'success');}
+  navigate('seller-orders');
+}
+
+/* --- PJ-02/03: BUAT PO --- */
+screens['seller-create-po']=()=>`
+<div class="screen active" id="screen-seller-create-po">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('seller-dashboard')">‹</button>
+    <h1 class="small">Buat PO Baru</h1>
+  </div>
+
+  <div class="input-group"><label>Nama PO</label><input class="input" placeholder="Misal: PO Seblak Special" id="po-name"></div>
+  <div class="input-group"><label>Kategori</label>
+    <select class="input" id="po-cat"><option value="food">🍜 Makanan</option><option value="jastip">✈️ Jastip</option><option value="laundry">🧺 Laundry</option><option value="print">🖨️ Print</option><option value="merch">👕 Merch</option></select>
+  </div>
+  <div class="input-group"><label>Deskripsi</label><textarea class="input" id="po-desc" placeholder="Jelaskan PO kamu..."></textarea></div>
+  <div class="input-group"><label>Harga per item (Rp)</label><input class="input" type="number" id="po-price" placeholder="15000"></div>
+  <div class="input-group"><label>Kuota</label><input class="input" type="number" id="po-quota" placeholder="20"></div>
+  <div class="input-group"><label>Tanggal Tutup PO</label><input class="input" type="date" id="po-deadline"></div>
+  <div class="input-group"><label>Foto PO (opsional)</label>
+    <div style="border:2px dashed var(--gray-300);border-radius:12px;padding:20px;text-align:center;cursor:pointer" onclick="this.querySelector('div').textContent='✅ foto.jpg';this.style.borderColor='var(--green-500)';this.style.background='var(--green-50)'">
+      <div style="font-size:32px">📷</div><div class="text-sm text-muted">Ketuk untuk unggah foto</div>
+    </div>
+  </div>
+
+  <div class="info-card" style="background:var(--blue-50)">
+    <div class="ic">ℹ️</div>
+    <div class="body"><h4 style="color:var(--blue-500)">Komisi & escrow</h4><p>Paket Free: komisi 5% per order. Dana cair setelah pembeli konfirmasi. Lihat <a style="color:var(--green-600);font-weight:600" onclick="navigate('seller-plans')">paket Pro</a> untuk komisi 3%.</p></div>
+  </div>
+
+  <button class="btn btn-primary btn-lg mt-2" onclick="createPO()">Buka PO</button>
+</div>`;
+
+function createPO(){
+  const name=$('#po-name').value||'PO Baru';
+  const cat=$('#po-cat').value;
+  const price=parseInt($('#po-price').value)||15000;
+  const quota=parseInt($('#po-quota').value)||20;
+  const deadline=$('#po-deadline').value||'Open';
+  D.pos.unshift({
+    id:'po'+(D.pos.length+1),title:name,seller:D.user.name,sellerId:'sl1',cat,catName:cat,
+    price,quota,taken:0,deadline,rating:0,reviews:0,status:'open',featured:false,
+    img:cat==='food'?'🍜':cat==='jastip'?'✈️':cat==='laundry'?'🧺':cat==='print'?'🖨️':'👕',
+    desc:$('#po-desc').value||'',eco:false
+  });
+  toast('PO dibuat & dibuka! 🎉','success');
+  navigate('seller-dashboard');
+}
+
+screens['seller-po-list']=()=>`
+<div class="screen active" id="screen-seller-po-list">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('seller-dashboard')">‹</button>
+    <h1 class="small">Kelola PO</h1>
+  </div>
+  ${D.pos.filter(p=>p.sellerId==='sl1').map(p=>{
+    const left=p.quota-p.taken;
+    return `
+    <div class="po-card" onclick="openDetail('${p.id}')">
+      <div class="img ${p.cat}" style="height:100px;font-size:36px">
+        <span class="status-badge ${p.status}">${p.status==='open'?'● Open':'Closed'}</span>
+      </div>
+      <div class="info">
+        <h3>${p.title}</h3>
+        <div class="meta">
+          <span>📦 ${left}/${p.quota}</span>
+          <span>${money(p.price)}</span>
+        </div>
+        <div class="flex gap-2 mt-2">
+          <button class="btn btn-sm ${p.status==='open'?'btn-outline':'btn-primary'}" onclick="event.stopPropagation();togglePO('${p.id}')">${p.status==='open'?'Tutup':'Buka'}</button>
+          <button class="btn btn-sm btn-amber" onclick="event.stopPropagation();navigate('seller-boost')">⚡ Boost</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('')}
+  <button class="btn btn-primary mt-3" onclick="navigate('seller-create-po')">➕ Buat PO Baru</button>
+</div>`;
+
+function togglePO(id){
+  const p=D.pos.find(x=>x.id===id);
+  p.status=p.status==='open'?'closed':'open';
+  toast('PO '+p.status==='open'?'dibuka':'ditutup','success');
+  navigate('seller-po-list');
+}
+
+/* --- PJ-06/07: BOOST & PAKET --- */
+screens['seller-boost']=()=>`
+<div class="screen active" id="screen-seller-boost">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('seller-dashboard')">‹</button>
+    <h1 class="small">Boost PO</h1>
+  </div>
+
+  <div class="info-card" style="background:var(--amber-50)">
+    <div class="ic">⚡</div>
+    <div class="body"><h4 style="color:var(--amber-400)">Tingkatkan jangkauan PO</h4><p>PO boosted tampil di slot Featured di beranda. Slot dibatasi 3-5 dan dirotasi.</p></div>
+  </div>
+
+  <div class="sec-head"><h2>Pilih PO untuk di-boost</h2></div>
+  ${D.pos.filter(p=>p.sellerId==='sl1').map(p=>`
+    <div class="po-card" onclick="selectBoost('${p.id}')" style="cursor:pointer">
+      <div class="info"><h3>${p.title}</h3><p class="text-sm text-muted">${money(p.price)} · ★ ${p.rating||'baru'}</p></div>
+    </div>
+  `).join('')}
+
+  <div class="sec-head"><h2>Pilih Paket Boost</h2></div>
+  <div class="plan-card" style="cursor:pointer" onclick="buyBoost('24h')">
+    <div class="flex justify-between items-center">
+      <div><h3 style="font-weight:700">⚡ Boost 24 Jam</h3><p class="text-sm text-muted">PO tampil di Featured selama 24 jam</p></div>
+      <div class="text-right"><div class="price-val">Rp5.000</div><div class="price-per">sekali bayar</div></div>
+    </div>
+  </div>
+  <div class="plan-card" style="cursor:pointer" onclick="buyBoost('3d')">
+    <div class="flex justify-between items-center">
+      <div><h3 style="font-weight:700">⚡ Boost 3 Hari</h3><p class="text-sm text-muted">PO tampil di Featured selama 3 hari</p></div>
+      <div class="text-right"><div class="price-val">Rp10.000</div><div class="price-per">sekali bayar</div></div>
+    </div>
+  </div>
+
+  <div class="info-card" style="background:var(--green-50)">
+    <div class="ic">🎁</div>
+    <div class="body"><h4 style="color:var(--green-700)">Boost gratis untuk penjual baru!</h4><p>Kamu punya 1× boost gratis. Gunakan untuk PO pertamamu.</p></div>
+  </div>
+</div>`;
+
+function selectBoost(id){D.boostPOId=id;toast('PO dipilih untuk boost','success');}
+function buyBoost(pkg){
+  if(!D.boostPOId){toast('Pilih PO dulu','error');return;}
+  const p=D.pos.find(x=>x.id===D.boostPOId);
+  if(p){p.featured=true;}
+  toast(`Boost aktif! ${p.title} tampil di Featured.`,'success');
+  navigate('seller-dashboard');
+}
+
+screens['seller-plans']=()=>`
+<div class="screen active" id="screen-seller-plans">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('seller-dashboard')">‹</button>
+    <h1 class="small">Paket NeMart</h1>
+  </div>
+
+  <div style="text-align:center;padding:12px 0 20px">
+    <div style="font-size:40px">⚡</div>
+    <h2 style="font-size:18px;font-weight:800">Pilih paketmu</h2>
+    <p class="text-sm text-muted">Upgrade untuk komisi lebih rendah & fitur lebih</p>
+  </div>
+
+  <div class="plan-card">
+    <div class="flex justify-between items-center mb-2">
+      <h3 style="font-weight:700">🌱 Paket Free</h3>
+      <span class="badge badge-gray">Paket aktif</span>
+    </div>
+    <div class="price-val">Rp0</div>
+    <div class="price-per">gratis selamanya</div>
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Komisi 5% per order</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Buat PO tanpa batas</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Dasbor dasar</li>
+      <li class="no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M6 18L18 6"/></svg> Boost berbayar</li>
+      <li class="no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M6 18L18 6"/></svg> Badge Penjual Pro</li>
+    </ul>
+  </div>
+
+  <div class="plan-card pro">
+    <div class="flex justify-between items-center mb-2">
+      <h3 style="font-weight:700">⭐ Paket Pro</h3>
+    </div>
+    <div class="price-val">Rp25.000<span style="font-size:14px;color:var(--gray-500);font-weight:400">/bulan</span></div>
+    <div class="price-per">bisa kapan saja</div>
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Komisi 3% per order (turun dari 5%)</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> 3× boost gratis per bulan</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Dasbor lengkap & statistik</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Badge Penjual Pro</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Prioritas support</li>
+    </ul>
+    <button class="btn btn-primary w-full mt-2" onclick="toast('Upgrade ke Pro (simulasi)','success');D.user.pro=true;navigate('seller-dashboard')">Upgrade ke Pro</button>
+  </div>
+
+  <div class="info-card" style="background:var(--blue-50)">
+    <div class="ic">💡</div>
+    <div class="body"><h4 style="color:var(--blue-500)">Contoh hemat</h4><p>Order Rp20.000: komisi Free Rp1.000 (5%), Pro Rp600 (3%). Hemit Rp400 per order. Cukup 63 order/bulan untuk cover biaya Pro!</p></div>
+  </div>
+</div>`;
+
+/* --- 14. ADMIN --- */
+screens['admin']=()=>`
+<div class="screen active" id="screen-admin">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('profile')">‹</button>
+    <h1 class="small">Panel Admin</h1>
+  </div>
+
+  <div class="seller-banner" style="background:linear-gradient(135deg,var(--purple-500),var(--indigo-500))">
+    <div class="ic">🛡️</div>
+    <div><h3 style="font-size:16px;font-weight:700">Tim NeMart</h3><p class="text-sm" style="opacity:.9">Verifikasi penjual & tangani laporan</p></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="adminTab(this,'verif')">Verifikasi (${D.pendingSellers.length})</button>
+    <button class="tab" onclick="adminTab(this,'reports')">Laporan (${D.reports.filter(r=>r.status==='pending').length})</button>
+  </div>
+
+  <div id="admin-verif">
+    <h2 style="font-size:14px;font-weight:700;margin-bottom:10px">Permintaan Verifikasi Penjual</h2>
+    ${D.pendingSellers.length?D.pendingSellers.map(s=>`
+      <div class="order-card">
+        <div class="oh">
+          <div class="ic" style="background:var(--purple-50)">${s.avatar}</div>
+          <div class="info" style="flex:1">
+            <h4>${s.name}</h4>
+            <p>${s.cat} · ${s.submitted}</p>
+            <p style="font-size:12px;color:var(--green-600)">📄 ${s.doc}</p>
+          </div>
+        </div>
+        <div class="of">
+          <button class="btn btn-sm btn-danger" onclick="rejectSeller('${s.id}')">✕ Tolak</button>
+          <button class="btn btn-sm btn-primary" onclick="approveSeller('${s.id}')">✓ Setujui</button>
+        </div>
+      </div>
+    `).join(''):'<div class="empty-state"><div class="ico">✅</div><p>Tidak ada permintaan</p></div>'}
+  </div>
+
+  <div id="admin-reports" class="hidden">
+    <h2 style="font-size:14px;font-weight:700;margin-bottom:10px">Laporan Masalah</h2>
+    ${D.reports.filter(r=>r.status==='pending').length?D.reports.filter(r=>r.status==='pending').map(r=>`
+      <div class="order-card">
+        <div class="oh">
+          <div class="ic" style="background:var(--red-50)">⚠️</div>
+          <div class="info" style="flex:1">
+            <h4>${r.id} · ${r.order}</h4>
+            <p>${r.buyer} vs ${r.seller}</p>
+            <p style="font-size:12px;color:var(--red-500)">${r.reason}</p>
+            <p class="text-xs text-muted mt-1">${r.detail}</p>
+            <p class="price" style="color:var(--gray-700)">Dana ditahan: ${money(r.amount)}</p>
+          </div>
+        </div>
+        <div class="of">
+          <button class="btn btn-sm btn-danger" onclick="resolveReport('${r.id}','refund')">↩ Refund ke Pembeli</button>
+          <button class="btn btn-sm btn-primary" onclick="resolveReport('${r.id}','release')">Cair ke Penjual</button>
+        </div>
+      </div>
+    `).join(''):'<div class="empty-state"><div class="ico">✅</div><p>Tidak ada laporan</p></div>'}
+  </div>
+</div>`;
+
+function adminTab(btn,tab){
+  $$('#screen-admin .tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  $('#admin-verif').classList.toggle('hidden',tab!=='verif');
+  $('#admin-reports').classList.toggle('hidden',tab!=='reports');
+}
+function approveSeller(id){
+  const i=D.pendingSellers.findIndex(s=>s.id===id);
+  if(i>-1)D.pendingSellers.splice(i,1);
+  toast('Penjual disetujui ✓','success');
+  navigate('admin');
+}
+function rejectSeller(id){
+  const i=D.pendingSellers.findIndex(s=>s.id===id);
+  if(i>-1)D.pendingSellers.splice(i,1);
+  toast('Penjual ditolak','error');
+  navigate('admin');
+}
+function resolveReport(id,action){
+  const r=D.reports.find(x=>x.id===id);
+  if(r){r.status='resolved';r.resolution=action;}
+  toast(action==='refund'?'Dana dikembalikan ke pembeli':'Dana cair ke penjual','success');
+  navigate('admin');
+}
+
+/* --- PROFILE --- */
+screens['profile']=()=>`
+<div class="screen active" id="screen-profile">
+  <div class="topbar">
+    <button class="icon-btn" onclick="navigate('beranda')">‹</button>
+    <h1 class="small">Profil</h1>
+    <button class="btn-icon" onclick="toast('Pengaturan (simulasi)')">⚙️</button>
+  </div>
+
+  <div style="text-align:center;padding:8px 0 20px">
+    <div class="profile-img">${D.user.avatar}</div>
+    <h2 style="font-size:18px;font-weight:800">${D.user.name}</h2>
+    <p class="text-sm text-muted">${D.user.email}</p>
+    ${D.user.isSeller?(D.user.sellerVerified?'<span class="badge badge-green mt-1">✓ Penjual Terverifikasi</span>':'<span class="badge badge-amber mt-1">Menunggu verifikasi</span>'):''}
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-ic" style="background:var(--blue-50)">📦</div><div class="stat-val">${D.orders.length}</div><div class="stat-lbl">Total pesanan</div></div>
+    <div class="stat-card"><div class="stat-ic" style="background:var(--amber-50)">⭐</div><div class="stat-val">4.5</div><div class="stat-lbl">Rating diberikan</div></div>
+  </div>
+
+  <div class="sec-head"><h2>Akun</h2></div>
+  <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm)">
+    ${[
+      {ic:'📦',t:'Pesanan Saya',nav:'track'},
+      {ic:'❤️',t:'PO Favorit',nav:'beranda'},
+      {ic:'🏪',t:D.user.isSeller?'Dasbor Penjual':'Daftar Jadi Penjual',nav:D.user.isSeller?'seller-dashboard':'seller-register'},
+      {ic:'🛡️',t:'Panel Admin',nav:'admin'},
+      {ic:'📜',t:'Syarat & Kebijakan',nav:'terms'},
+      {ic:'❓',t:'Bantuan',nav:'help'},
+    ].map((m,i,arr)=>`
+      <div onclick="navigate('${m.nav}')" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;${i<arr.length-1?'border-bottom:1px solid var(--gray-100)':''}">
+        <span style="font-size:18px">${m.ic}</span>
+        <span style="flex:1;font-size:14px;font-weight:600">${m.t}</span>
+        <span style="color:var(--gray-400)">›</span>
+      </div>
+    `).join('')}
+  </div>
+
+  <button class="btn btn-outline mt-4" onclick="navigate('login')">Keluar</button>
+
+  <p class="text-center text-xs text-muted mt-4">NeMart Prototype v0.1<br>ITC Business Plan 2026</p>
+</div>`;
+
+screens['terms']=()=>`
+<div class="screen active" id="screen-terms">
+  <div class="topbar"><button class="icon-btn" onclick="navigate('profile')">‹</button><h1 class="small">Syarat & Kebijakan</h1></div>
+  <div class="info-card" style="background:var(--green-50)"><div class="ic">📜</div><div class="body"><h4 style="color:var(--green-700)">Komisi</h4><p>Free: 5% per order · Pro: 3% per order. Komisi dipotong saat dana cair.</p></div></div>
+  <div class="info-card" style="background:var(--blue-50)"><div class="ic">🔒</div><div class="body"><h4 style="color:var(--blue-500)">Escrow</h4><p>Dana pembeli ditahan sampai konfirmasi pesanan diterima atau keputusan admin.</p></div></div>
+  <div class="info-card" style="background:var(--amber-50)"><div class="ic">⚡</div><div class="body"><h4 style="color:var(--amber-400)">Boost</h4><p>Rp5.000/24 jam atau Rp10.000/3 hari. Slot dibatasi 3-5, dirotasi, syarat rating minimum.</p></div></div>
+  <div class="info-card" style="background:var(--red-50)"><div class="ic">⚠️</div><div class="body"><h4 style="color:var(--red-700)">Sengketa</h4><p>Pembeli bisa laporkan masalah. Admin meninjau & memutuskan dana kembali atau cair.</p></div></div>
+</div>`;
+screens['help']=()=>`
+<div class="screen active" id="screen-help">
+  <div class="topbar"><button class="icon-btn" onclick="navigate('profile')">‹</button><h1 class="small">Bantuan</h1></div>
+  <div class="empty-state"><div class="ico">💬</div><h3>Butuh bantuan?</h3><p class="text-sm">Hubungi tim NeMart via WhatsApp atau email.</p><button class="btn btn-primary mt-3" onclick="toast('Membuka WhatsApp (simulasi)')">💬 WhatsApp</button></div>
+</div>`;
+
+/* ============================================================ BOTTOM NAV */
+const navConfig={
+  'beranda':[{ic:'🏠',t:'Beranda',nav:'beranda'},{ic:'🔍',t:'Cari',nav:'search'},{fab:true,ic:'+',t:'Jual',nav:'seller-dashboard'},{ic:'📦',t:'Pesanan',nav:'track'},{ic:'👤',t:'Profil',nav:'profile'}],
+  'search':[{ic:'🏠',t:'Beranda',nav:'beranda'},{ic:'🔍',t:'Cari',nav:'search',active:true},{fab:true,ic:'+',t:'Jual',nav:'seller-dashboard'},{ic:'📦',t:'Pesanan',nav:'track'},{ic:'👤',t:'Profil',nav:'profile'}],
+  'track':[{ic:'🏠',t:'Beranda',nav:'beranda'},{ic:'🔍',t:'Cari',nav:'search'},{fab:true,ic:'+',t:'Jual',nav:'seller-dashboard'},{ic:'📦',t:'Pesanan',nav:'track',active:true},{ic:'👤',t:'Profil',nav:'profile'}],
+  'profile':[{ic:'🏠',t:'Beranda',nav:'beranda'},{ic:'🔍',t:'Cari',nav:'search'},{fab:true,ic:'+',t:'Jual',nav:'seller-dashboard'},{ic:'📦',t:'Pesanan',nav:'track'},{ic:'👤',t:'Profil',nav:'profile',active:true}],
+  'seller-dashboard':[{ic:'🏠',t:'Beranda',nav:'beranda'},{ic:'🔍',t:'Cari',nav:'search'},{fab:true,ic:'+',t:'Jual',nav:'seller-dashboard',active:true},{ic:'📦',t:'Pesanan',nav:'track'},{ic:'👤',t:'Profil',nav:'profile'}],
+};
+
+function renderBottomNav(){
+  const container=$('#bottom-nav-container');
+  // detect current screen
+  const active=$('.screen.active');
+  const screenId=active?active.id.replace('screen-',''):'';
+  const config=navConfig[screenId];
+  if(!config){container.innerHTML='';return;}
+  container.innerHTML=`<div class="bottom-nav">${config.map(n=>`
+    <button class="nav-item ${n.active?'active':''} ${n.fab?'fab':''}" onclick="navigate('${n.nav}')">
+      <div class="ico">${n.fab?'+':n.ic}</div>
+      <span>${n.t}</span>
+    </button>
+  `).join('')}</div>`;
+}
+
+/* ============================================================ RENDER */
+function render(screenId){
+  const fn=screens[screenId];
+  if(!fn){console.error('No screen:',screenId);return;}
+  $('#content').innerHTML=fn();
+  showScreen('screen-'+screenId);
+  // post-render hooks
+  if(screenId==='search')renderSearchResults();
+}
+
+// Override showScreen to use render
+const _origShowScreen=showScreen;
+showScreen=function(id){closeSheet();render(id);};
+navigate=function(id){closeSheet();render(id);};
+
+/* ============================================================ INIT */
+render('login');
+</script>
+</body>
+</html>
