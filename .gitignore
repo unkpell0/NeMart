@@ -1,0 +1,16 @@
+# Database demo & berkas runtime
+data/nemart.sqlite
+data/nemart.sqlite-shm
+data/nemart.sqlite-wal
+data/sessions/
+data/php-error.log
+data/cookies-*.txt
+data/debug-*.html
+data/.seed.lock
+
+# Editor & OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

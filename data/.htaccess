@@ -1,0 +1,2 @@
+# Jangan pernah menyajikan file database atau sesi lewat web.
+Require all denied

@@ -1,0 +1,14 @@
+.git
+.gitignore
+data/nemart.sqlite
+data/nemart.sqlite-shm
+data/nemart.sqlite-wal
+data/sessions
+data/php-error.log
+data/cookies-*.txt
+data/debug-*.html
+data/.seed.lock
+tools/
+shots/
+README.md
+NeMart_PRD.md

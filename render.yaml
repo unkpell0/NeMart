@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: nemart
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz.php
+    envVars:
+      - key: PORT
+        value: 10000

@@ -1,0 +1,119 @@
+/* =========================================================================
+   NeMart — token desain
+   Palet, tipografi, radius, bayangan, dan jarak. Semua halaman memakai token.
+   ========================================================================= */
+
+:root {
+    /* Biru */
+    --blue-900: #071C7A;
+    --blue-700: #0B2FC9;
+    --blue-600: #1F41D6;
+    --blue-500: #5B8DEF;
+    --blue-300: #A8C8FF;
+    --blue-100: #E3EDFF;
+    --blue-50:  #F1F6FF;
+
+    /* Cyan & indigo */
+    --cyan-500: #A8E6F7;
+    --cyan-400: #6FD4EE;
+    --cyan-100: #E6F9FE;
+    --indigo-700: #3F3BA8;
+    --indigo-900: #2A2B7A;
+
+    /* Navy */
+    --navy-900: #2F4A7A;
+    --navy-800: #24395F;
+    --navy-700: #1C2C48;
+
+    /* Aksen */
+    --yellow-500: #FFD23F;
+    --yellow-600: #F2BE12;
+    --yellow-100: #FFF7DA;
+    --orange-500: #F5A623;
+
+    /* Status */
+    --success: #3DBE8B;
+    --success-fg: #16744D;
+    --success-bg: #E4F7EE;
+    --success-solid: #2FA875;
+
+    --warning: #F5A623;
+    --warning-fg: #8A5300;
+    --warning-bg: #FFF4DF;
+    --warning-solid: #E09112;
+
+    --info: #0B2FC9;
+    --info-fg: #13389E;
+    --info-bg: #E8F0FF;
+    --info-solid: #2C5BE0;
+
+    --danger: #D64545;
+    --danger-fg: #A62B2B;
+    --danger-bg: #FBE9E9;
+    --danger-solid: #C23636;
+
+    --neutral-fg: #4A5568;
+    --neutral-bg: #EEF1F7;
+
+    /* Permukaan */
+    --bg: #EEF3FC;
+    --surface: #FFFFFF;
+    --surface-2: #F7FAFF;
+    --surface-3: #EDF3FF;
+    --border: #DCE5F5;
+    --border-strong: #C3D3EE;
+    --text: #1A1A2E;
+    --text-muted: #64748B;
+    --text-soft: #8B97AC;
+
+    /* Tipografi */
+    --font-display: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --fs-xs: 11px;
+    --fs-sm: 12px;
+    --fs-base: 14px;
+    --fs-md: 15px;
+    --fs-lg: 18px;
+    --fs-xl: 20px;
+    --fs-2xl: 24px;
+    --fs-3xl: 28px;
+    --fs-4xl: 36px;
+
+    /* Bentuk */
+    --r-xs: 6px;
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 18px;
+    --r-xl: 24px;
+    --r-pill: 999px;
+
+    /* Bayangan */
+    --sh-xs: 0 1px 2px rgba(15, 35, 95, .06);
+    --sh-sm: 0 1px 2px rgba(15, 35, 95, .05), 0 4px 12px rgba(15, 35, 95, .06);
+    --sh-md: 0 6px 18px rgba(15, 35, 95, .08), 0 2px 6px rgba(15, 35, 95, .05);
+    --sh-lg: 0 18px 40px rgba(15, 35, 95, .12), 0 4px 12px rgba(15, 35, 95, .06);
+    --sh-pop: 0 28px 70px rgba(11, 47, 201, .20), 0 4px 14px rgba(15, 35, 95, .10);
+
+    /* Jarak (kelipatan 4px) */
+    --sp-1: 4px;
+    --sp-2: 8px;
+    --sp-3: 12px;
+    --sp-4: 16px;
+    --sp-5: 20px;
+    --sp-6: 24px;
+    --sp-8: 32px;
+    --sp-10: 40px;
+    --sp-12: 48px;
+    --sp-16: 64px;
+
+    /* Layout */
+    --container: 1240px;
+    --header-h: 76px;
+    --sidebar-w: 264px;
+
+    /* Gradien (hanya hero & panel brand) */
+    --grad-hero: linear-gradient(135deg, #0B2FC9 0%, #3F3BA8 48%, #2F4A7A 100%);
+    --grad-hero-soft: linear-gradient(135deg, #E8F0FF 0%, #E6F9FE 100%);
+
+    --transition: 180ms cubic-bezier(.4, 0, .2, 1);
+}
