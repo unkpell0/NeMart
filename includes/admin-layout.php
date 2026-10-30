@@ -20,12 +20,9 @@ require __DIR__ . '/head.php';
 ?>
 <div class="shell">
     <aside class="sidebar" id="adminSidebar" aria-label="Navigasi Panel Admin">
-        <a class="sidebar__brand" href="<?= e(url('admin/dashboard.php')) ?>">
-            <span class="brand__mark"><span>N</span></span>
-            <span class="brand__text">
-                <span class="brand__name">Panel Admin</span>
-                <span class="brand__tag">NeMart Polinema</span>
-            </span>
+        <a class="sidebar__brand" href="<?= e(url('admin/dashboard.php')) ?>" aria-label="NeMart Panel Admin">
+            <span class="sidebar__brand-logo"><img src="<?= e(asset('img/logo.png')) ?>" alt="NeMart" width="643" height="200"></span>
+            <span class="sidebar__brand-role">Panel Admin</span>
         </a>
 
         <div class="sidebar__store">

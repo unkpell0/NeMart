@@ -1,5 +1,7 @@
 # NeMart — Marketplace Usaha Mahasiswa Polinema
 
+![Logo NeMart](assets/img/logo.png)
+
 Demo MVP untuk Lomba ICT Recursion 2.0 (Tim **Pengen Juara**). Dibangun persis mengikuti `NeMart_PRD_v2_Demo_MVP.md`: PHP 8.2 native, SQLite, HTML server-rendered, tanpa build step.
 
 > **Tagline:** Connecting Student Businesses, One Click at a Time

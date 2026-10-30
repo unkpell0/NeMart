@@ -22,11 +22,7 @@ $searchValue = is_string($_GET['q'] ?? null) ? trim((string) $_GET['q']) : '';
 <header class="site-header" id="siteHeader">
     <div class="container header__inner">
         <a class="brand" href="<?= e(url('index.php')) ?>" aria-label="NeMart, kembali ke beranda">
-            <span class="brand__mark"><span>N</span></span>
-            <span class="brand__text">
-                <span class="brand__name">NeMart</span>
-                <span class="brand__tag">Polinema</span>
-            </span>
+            <img class="brand__logo" src="<?= e(asset('img/logo.png')) ?>" alt="NeMart" width="643" height="200">
         </a>
 
         <div class="header-search">

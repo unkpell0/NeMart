@@ -69,11 +69,7 @@ require __DIR__ . '/includes/head.php';
     <section class="auth__brand" aria-label="Tentang NeMart">
         <div class="auth__brand-inner">
             <div class="auth__logo">
-                <span class="brand__mark"><span>N</span></span>
-                <span class="brand__text">
-                    <span class="brand__name">NeMart</span>
-                    <span class="brand__tag">Polinema</span>
-                </span>
+                <img src="<?= e(asset('img/logo.png')) ?>" alt="NeMart — marketplace usaha mahasiswa Polinema" width="643" height="200">
             </div>
             <h1 class="auth__headline">Satu klik untuk<br><em>usaha mahasiswa</em><br>yang lebih rapi.</h1>
             <p class="auth__text">NeMart menghubungkan pembeli kampus dengan toko mahasiswa: katalog rapi, escrow yang menahan dana sampai pesanan diterima, dan pencatatan pesanan yang benar-benar tersambung antara pembeli dan penjual.</p>

@@ -5,8 +5,7 @@
     <div class="container footer__grid">
         <div>
             <div class="footer__brand">
-                <span class="brand__mark"><span>N</span></span>
-                <span class="brand__name" style="font-family:var(--font-display);font-weight:700;">NeMart</span>
+                <img class="footer__logo" src="<?= e(asset('img/logo.png')) ?>" alt="NeMart" width="643" height="200">
             </div>
             <p class="footer__desc">Connecting Student Businesses, One Click at a Time. Marketplace yang menghubungkan usaha mahasiswa Polinema dengan pembeli di kampus.</p>
             <div class="footer__chips" style="margin-top:14px">

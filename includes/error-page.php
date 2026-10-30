@@ -9,7 +9,8 @@ $error_message = $error_message ?? 'Tautan yang kamu buka mungkin sudah berubah 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($error_title) ?> · NeMart</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230B2FC9'/%3E%3Cpath d='M20 46V18h5l14 19V18h5v28h-5L25 27v19z' fill='%23fff'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/png" href="<?= e(asset('img/favicon.png')) ?>">
+    <link rel="apple-touch-icon" href="<?= e(asset('img/apple-touch-icon.png')) ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
@@ -21,9 +22,8 @@ $error_message = $error_message ?? 'Tautan yang kamu buka mungkin sudah berubah 
 <body>
 <main class="error-page" id="main">
     <div class="error-card">
-        <a class="brand" href="<?= e(url('index.php')) ?>" style="justify-content:center;margin-bottom:18px">
-            <span class="brand__mark"><span>N</span></span>
-            <span class="brand__text"><span class="brand__name">NeMart</span></span>
+        <a class="brand" href="<?= e(url('index.php')) ?>" style="justify-content:center;margin-bottom:18px" aria-label="NeMart">
+            <img class="brand__logo" src="<?= e(asset('img/logo.png')) ?>" alt="NeMart" width="643" height="200">
         </a>
         <div class="error-code"><?= e($error_code) ?></div>
         <h1><?= e($error_title) ?></h1>

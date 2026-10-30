@@ -318,6 +318,12 @@ table {
     flex-shrink: 0;
 }
 
+.brand__logo {
+    height: 46px;
+    width: auto;
+    display: block;
+}
+
 .brand__mark {
     width: 42px;
     height: 42px;
@@ -768,6 +774,12 @@ table {
     margin-bottom: var(--sp-3);
 }
 
+.footer__logo {
+    height: 44px;
+    width: auto;
+    display: block;
+}
+
 .footer__brand .brand__mark {
     width: 38px;
     height: 38px;
@@ -882,6 +894,10 @@ table {
 
     .brand__tag {
         display: none;
+    }
+
+    .brand__logo {
+        height: 38px;
     }
 
     .header-search {

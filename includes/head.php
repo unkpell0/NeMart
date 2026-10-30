@@ -3,6 +3,11 @@
 $page_title = $page_title ?? 'Beranda';
 $page_desc = $page_desc ?? 'NeMart — marketplace usaha mahasiswa Politeknik Negeri Malang. Temukan makanan, minuman, jasa, dan merch dari toko mahasiswa dengan pembayaran escrow yang aman.';
 $body_class = $body_class ?? '';
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+$shareImage = (!empty($_SERVER['HTTP_HOST']))
+    ? (($isHttps ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . asset('img/logo.png'))
+    : asset('img/logo.png');
 ?><!DOCTYPE html>
 <html lang="id">
 <head>
@@ -11,7 +16,14 @@ $body_class = $body_class ?? '';
     <title><?= e($page_title) ?> · NeMart</title>
     <meta name="description" content="<?= e($page_desc) ?>">
     <meta name="theme-color" content="#0B2FC9">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230B2FC9'/%3E%3Cpath d='M20 46V18h5l14 19V18h5v28h-5L25 27v19z' fill='%23fff'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/png" href="<?= e(asset('img/favicon.png')) ?>">
+    <link rel="apple-touch-icon" href="<?= e(asset('img/apple-touch-icon.png')) ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="NeMart">
+    <meta property="og:title" content="<?= e($page_title) ?> · NeMart">
+    <meta property="og:description" content="<?= e($page_desc) ?>">
+    <meta property="og:image" content="<?= e($shareImage) ?>">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">

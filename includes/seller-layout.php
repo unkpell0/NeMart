@@ -24,12 +24,9 @@ require __DIR__ . '/head.php';
 ?>
 <div class="shell">
     <aside class="sidebar" id="sellerSidebar" aria-label="Navigasi Seller Centre">
-        <a class="sidebar__brand" href="<?= e(url('seller/dashboard.php')) ?>">
-            <span class="brand__mark"><span>N</span></span>
-            <span class="brand__text">
-                <span class="brand__name">Seller Centre</span>
-                <span class="brand__tag">NeMart Polinema</span>
-            </span>
+        <a class="sidebar__brand" href="<?= e(url('seller/dashboard.php')) ?>" aria-label="NeMart Seller Centre">
+            <span class="sidebar__brand-logo"><img src="<?= e(asset('img/logo.png')) ?>" alt="NeMart" width="643" height="200"></span>
+            <span class="sidebar__brand-role">Seller Centre</span>
         </a>
 
         <div class="sidebar__store">
