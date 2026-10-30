@@ -108,6 +108,13 @@ Syarat: PHP 8.2+, ekstensi `pdo_sqlite`, `mbstring`, `session` aktif.
 - [ ] Data Tracking PRO terbuka; versi Free terkunci
 - [ ] Admin bisa reset data demo
 
+Uji otomatis seluruh alur terhadap domain publik (skrip akan mereset data di akhir):
+
+```powershell
+$env:NEMART_BASE="https://domain-kamu.onrender.com"
+php tools/smoke.php
+```
+
 ## Troubleshooting
 
 | Gejala | Penyebab umum | Perbaikan |

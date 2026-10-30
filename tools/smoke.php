@@ -10,7 +10,13 @@ if (PHP_SAPI !== 'cli') {
     exit('Halaman tidak ditemukan.');
 }
 
-const BASE = 'http://127.0.0.1:8123';
+$baseOverride = getenv('NEMART_BASE') ?: '';
+foreach ($argv ?? [] as $arg) {
+    if (str_starts_with($arg, '--base=')) {
+        $baseOverride = substr($arg, 7);
+    }
+}
+define('BASE', rtrim($baseOverride !== '' ? $baseOverride : 'http://127.0.0.1:8123', '/'));
 
 $pass = 0;
 $fail = 0;
@@ -56,7 +62,8 @@ class Browser
             CURLOPT_MAXREDIRS      => 6,
             CURLOPT_COOKIEJAR      => $this->jar,
             CURLOPT_COOKIEFILE     => $this->jar,
-            CURLOPT_TIMEOUT        => 25,
+            CURLOPT_TIMEOUT        => 60,
+            CURLOPT_CONNECTTIMEOUT => 15,
             CURLOPT_HTTPHEADER     => ['Accept: text/html'],
         ]);
         if ($method === 'POST') {
