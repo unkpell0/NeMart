@@ -108,12 +108,18 @@ Syarat: PHP 8.2+, ekstensi `pdo_sqlite`, `mbstring`, `session` aktif.
 - [ ] Data Tracking PRO terbuka; versi Free terkunci
 - [ ] Admin bisa reset data demo
 
-Uji otomatis seluruh alur terhadap domain publik (skrip akan mereset data di akhir):
+Uji otomatis seluruh alur terhadap domain publik (skrip mereset data demo sebelum & sesudah uji):
 
 ```powershell
+# uji alur pembeli -> penjual -> admin (73 pemeriksaan)
+php tools/uji-alur.php --base=https://domain-kamu.onrender.com
+
+# uji regresi teknis yang lebih dalam (96 pemeriksaan)
 $env:NEMART_BASE="https://domain-kamu.onrender.com"
 php tools/smoke.php
 ```
+
+Jika instance Render baru bangun, `uji-alur.php` menunggu otomatis hingga health check merespons.
 
 ## Troubleshooting
 

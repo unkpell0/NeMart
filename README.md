@@ -135,7 +135,7 @@ nemart/
 ├── db/       schema.sql, seed.php
 ├── assets/   css/{tokens,base,components,pages}.css, js/app.js
 ├── data/     nemart.sqlite (dibuat otomatis, di-ignore git)
-├── tools/    smoke.php (uji alur end-to-end)
+├── tools/    uji-alur.php (uji pembeli → penjual → admin), smoke.php (regresi)
 ├── Dockerfile · render.yaml · docker-entrypoint.sh
 └── README.md
 ```
@@ -148,15 +148,49 @@ nemart/
 
 ## 7. Pengujian
 
-```bash
-# jalankan server dulu di port 8123
-php -S 127.0.0.1:8123
+Jalankan server dulu:
 
-# di terminal lain
+```bash
+php -S 127.0.0.1:8123
+```
+
+### Uji alur demo: pembeli → penjual → admin
+
+```bash
+php tools/uji-alur.php
+```
+
+Skrip ini menelusuri 11 fase dan **73 pemeriksaan** dengan output bernomor:
+
+1. Kesiapan aplikasi, health check, logo/favicon, dan reset data.
+2. Login pembeli, keranjang kosong, notifikasi.
+3. Katalog, pencarian “kopi”, produk Featured di urutan teratas, filter kategori, empty state.
+4. Detail produk, varian, catatan, tambah ke keranjang.
+5. Keranjang, ubah jumlah, subtotal.
+6. Checkout, ongkir, pembayaran simulasi, kode pesanan, keranjang kosong.
+7. Penjual menerima → Diproses → Siap; notifikasi ke pembeli.
+8. Pembeli melihat timeline → Konfirmasi Diterima → escrow dilepas.
+9. Pembeli memberi rating & ulasan; penjual membalas.
+10. Seller PRO membuka Data Tracking dan membeli Boost; produk jadi Featured.
+11. Admin memverifikasi toko pending, memantau pesanan, lalu reset data.
+
+Opsi:
+
+```bash
+php tools/uji-alur.php --base=https://nemart-xxxx.onrender.com   # uji domain deploy
+php tools/uji-alur.php --keep-data                               # jangan reset di akhir
+php tools/uji-alur.php --no-reset                                # jangan reset sama sekali
+```
+
+> **Peringatan:** secara default skrip mereset data demo di target sebelum dan sesudah uji. Jangan arahkan ke data produksi nyata.
+
+### Uji regresi mendalam
+
+```bash
 php tools/smoke.php
 ```
 
-`tools/smoke.php` menguji 96 assertion: seluruh halaman publik, login per peran, alur keranjang → checkout multi-toko → seller memproses → pembeli konfirmasi → ulasan, pembatalan oleh pembeli, penolakan oleh penjual, penjagaan transisi status, Data Tracking PRO vs Free, Boost, verifikasi admin, guard akses, dan reset demo. Semua lulus tanpa galat PHP, dan skrip bisa dijalankan berulang kali karena diakhiri reset data.
+`tools/smoke.php` menjalankan **96 assertion** yang lebih teknis: seluruh halaman publik, login per peran, checkout multi-toko, pembatalan pembeli, penolakan penjual, penjagaan transisi status, Data Tracking PRO vs Free, Boost, verifikasi admin, guard akses, dan reset demo. Skrip diakhiri reset sehingga bisa dijalankan berulang.
 
 ---
 
