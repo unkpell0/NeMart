@@ -1,5 +1,7 @@
 # Deploy NeMart
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/unkpell0/NeMart/tree/v2-demo)
+
 Aplikasi ini adalah PHP 8.2 + SQLite tanpa layanan eksternal. Cara paling mudah dan gratis: **Render (Docker) + GitHub**. Panduan lain disertakan di bawah.
 
 > **Penting:** root repository harus folder yang berisi `index.php`, `Dockerfile`, dan `render.yaml` (yaitu isi folder `nemart/`). Jangan menaruhnya satu level terlalu dalam, kecuali kamu menyesuaikan `dockerfilePath` dan `dockerContext` di Render.
@@ -8,11 +10,13 @@ Aplikasi ini adalah PHP 8.2 + SQLite tanpa layanan eksternal. Cara paling mudah 
 
 ## Opsi A — Render + GitHub (disarankan, gratis)
 
-### 1. Buat repository GitHub
+Kode sudah tersedia di branch **`v2-demo`** pada repo <https://github.com/unkpell0/NeMart>. Cara tercepat: klik tombol **Deploy to Render** di atas, login Render dengan GitHub, lalu **Apply** Blueprint. Render membaca `render.yaml`, memakai branch `v2-demo`, dan membuat service `nemart`.
 
-Buat repo kosong bernama `nemart` di GitHub (boleh private). Jangan centang “Add README”.
+Jika ingin melakukannya manual:
 
-Di PowerShell, dari folder `nemart/`:
+### 1. Repository GitHub
+
+Branch yang dipakai: `v2-demo` (main tidak diubah). Untuk repo baru:
 
 ```powershell
 git init -b main
