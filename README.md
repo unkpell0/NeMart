@@ -7,7 +7,7 @@ Demo MVP untuk Lomba ICT Recursion 2.0 (Tim **Pengen Juara**). Dibangun persis m
 > **Tagline:** Connecting Student Businesses, One Click at a Time
 > **Pembayaran disimulasikan.** Tidak ada payment gateway, tidak ada uang nyata.
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/unkpell0/NeMart/tree/v2-demo)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/unkpell0/NeMart)
 
 Panduan deploy lengkap (Render, Railway, VPS, cPanel): [`DEPLOY.md`](DEPLOY.md).
 
