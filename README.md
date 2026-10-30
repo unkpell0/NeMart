@@ -10,6 +10,7 @@ Demo MVP untuk Lomba ICT Recursion 2.0 (Tim **Pengen Juara**). Dibangun persis m
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/unkpell0/NeMart)
 
 Panduan deploy lengkap (Render, Railway, VPS, cPanel): [`DEPLOY.md`](DEPLOY.md).
+Untuk presentasi cepat tanpa akun cloud: [`PRESENTASI-CLOUDFLARE.md`](PRESENTASI-CLOUDFLARE.md) (Cloudflare Tunnel sementara).
 
 ---
 

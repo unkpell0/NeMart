@@ -7,6 +7,9 @@ data/php-error.log
 data/cookies-*.txt
 data/debug-*.html
 data/.seed.lock
+data/url-presentasi.txt
+data/tunnel-presentasi*.log
+tools/bin/
 
 # Editor & OS
 .DS_Store
